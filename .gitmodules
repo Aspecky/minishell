@@ -1,0 +1,3 @@
+[submodule "source/libs/ftlibc"]
+	path = source/libs/ftlibc
+	url = git@github.com:Aspecky/ftlibc.git
