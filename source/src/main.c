@@ -6,15 +6,19 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/12 22:16:24 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/14 21:54:00 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "SinglyLinkedList.h"
 #include "minishell.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "parsing.h"
+#include "utils.h"
 #include <stdbool.h>
-#include <readline/readline.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "_debug.h"
 
 int main(void)
 {
@@ -24,17 +28,27 @@ int main(void)
 		return (EXIT_FAILURE);
 	}
 
+	t_sllist *commands;
 	char *line;
 
 	line = 0;
 	while (true)
 	{
-		(free(line), line = 0);
-		line = readline("minishell> ");
+		line = rl_gets("minishell> ");
 		if (!line)
 			break;
-		printf("'%s'\n", line);
+		commands = parse(line);
+		if (!commands)
+		{
+			perror("parser");
+			continue;
+		}
+
+		// Print the parsed pipeline for debugging
+		print_pipeline(commands);
+
+		// Free the pipeline resources
+		free_pipeline_commands(commands);
 	}
-	free(line);
 	printf("exit\n");
 }

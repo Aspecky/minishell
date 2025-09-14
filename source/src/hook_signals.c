@@ -6,12 +6,12 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 21:52:36 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/12 22:11:35 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/13 17:20:18 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "sigutils.h"
+#include "utils.h"
 #include <readline/readline.h>
 #include <signal.h>
 #include <stdbool.h>

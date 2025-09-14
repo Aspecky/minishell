@@ -6,11 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 21:47:47 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/12 22:08:20 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/13 17:20:53 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sigutils.h"
+#include "utils.h"
 
 void init_sigaction(struct sigaction *act, void (*handler)(int))
 {
