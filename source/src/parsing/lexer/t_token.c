@@ -1,21 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   _debug.h                                           :+:      :+:    :+:   */
+/*   t_token.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/14 15:43:36 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:24:39 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/15 01:41:00 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/15 21:25:17 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef _DEBUG_H
-#define _DEBUG_H
+#include "lexer.h"
+#include <stdlib.h>
 
-#include "SinglyLinkedList.h"
+t_token *token_new(t_token_type type, char *value)
+{
+	t_token *token;
 
-void print_pipeline(const t_sllist *commands);
-void print_tokens(const t_sllist *tokens);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (0);
+	token->type = type;
+	token->value = value;
+	return (token);
+}
 
-#endif
+void token_free(void *data)
+{
+	t_token *token;
+
+	if (!data)
+		return ;
+	token = data;
+	free(token->value);
+	free(token);
+}

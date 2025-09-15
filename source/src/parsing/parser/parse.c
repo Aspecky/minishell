@@ -1,53 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:31:45 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/15 21:23:36 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "SinglyLinkedList.h"
+
 #include "_debug.h"
-#include "minishell.h"
+#include "lexer.h"
 #include "parser.h"
-#include "utils.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void)
+t_sllist *parse(char *stream)
 {
-	if (hook_signals() == -1)
-	{
-		perror("sigaction");
-		return (EXIT_FAILURE);
-	}
-
+	t_sllist *tokens;
 	t_sllist *commands;
-	char *line;
 
-	line = 0;
-	while (true)
-	{
-		line = rl_gets("minishell> ");
-		if (!line)
-			break;
-		commands = parse(line);
-		if (!commands)
-		{
-			perror("parser");
-			continue;
-		}
+	// Step 1: Tokenize the input
+	tokens = tokenize(stream);
+	if (!tokens)
+		return (NULL);
 
-		// Print the parsed pipeline for debugging
-		print_pipeline(commands);
+	print_tokens(tokens);
 
-		// Free the pipeline resources
-		sllist_free(commands, cmd_free);
-	}
-	printf("exit\n");
+	// Step 2: Group tokens into commands (split by pipes)
+	commands = tokens_to_commands(tokens);
+
+	sllist_free(tokens, token_free);
+
+	return (commands);
 }

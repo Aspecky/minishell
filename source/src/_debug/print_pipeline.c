@@ -6,12 +6,12 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:30:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/14 21:51:29 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/15 21:31:34 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "_debug.h"
-#include "SinglyLinkedList.h"
+#include "parser.h"
 #include <stdio.h>
 
 void print_pipeline(const t_sllist *commands)
@@ -28,23 +28,21 @@ void print_pipeline(const t_sllist *commands)
 	}
 
 	printf("Pipeline:\n");
-	
+
 	current = commands->head;
 	i = 0;
 	while (current)
 	{
 		printf("  Command %zu: ", i);
-		
+
 		cmd = (t_cmd *)current->data;
 		if (!cmd)
 		{
 			printf("NULL\n");
-		}
-		else if (!cmd->argv || !cmd->argv[0])
+		} else if (!cmd->argv || !cmd->argv[0])
 		{
 			printf("(empty command)\n");
-		}
-		else
+		} else
 		{
 			printf("[");
 			for (j = 0; cmd->argv[j]; j++)
@@ -54,7 +52,7 @@ void print_pipeline(const t_sllist *commands)
 				printf("\"%s\"", cmd->argv[j]);
 			}
 			printf("]\n");
-			
+
 			// Print redirections
 			if (cmd->redirs && cmd->redirs->size > 0)
 			{
@@ -69,20 +67,20 @@ void print_pipeline(const t_sllist *commands)
 						printf("      [%zu] ", redir_idx);
 						switch (redir->type)
 						{
-							case REDIR_IN:
-								printf("< %s", redir->file_or_limiter);
-								break;
-							case REDIR_OUT:
-								printf("> %s", redir->file_or_limiter);
-								break;
-							case REDIR_APPEND:
-								printf(">> %s", redir->file_or_limiter);
-								break;
-							case REDIR_HEREDOC:
-								printf("<< %s", redir->file_or_limiter);
-								if (redir->here_doc_read != -1)
-									printf(" (fd: %d)", redir->here_doc_read);
-								break;
+						case REDIR_IN:
+							printf("< %s", redir->file_or_delim);
+							break;
+						case REDIR_OUT:
+							printf("> %s", redir->file_or_delim);
+							break;
+						case REDIR_APPEND:
+							printf(">> %s", redir->file_or_delim);
+							break;
+						case REDIR_HEREDOC:
+							printf("<< %s", redir->file_or_delim);
+							if (redir->here_doc_read != -1)
+								printf(" (fd: %d)", redir->here_doc_read);
+							break;
 						}
 						printf("\n");
 					}
@@ -91,7 +89,7 @@ void print_pipeline(const t_sllist *commands)
 				}
 			}
 		}
-		
+
 		current = current->next;
 		i++;
 	}

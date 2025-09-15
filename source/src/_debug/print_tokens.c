@@ -6,11 +6,12 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:00:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/14 17:18:16 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/15 21:32:06 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "_debug.h"
+#include "lexer.h"
 #include <stdio.h>
 
 static const char *token_type_to_string(t_token_type type)
