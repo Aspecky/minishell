@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:31:45 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/16 00:32:35 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 int main(void)
 {
@@ -39,7 +40,8 @@ int main(void)
 		commands = parse(line);
 		if (!commands)
 		{
-			perror("parser");
+			if (errno != EXIT_SUCCESS)
+				perror("parser");
 			continue;
 		}
 

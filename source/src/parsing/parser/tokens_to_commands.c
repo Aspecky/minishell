@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 01:45:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:43:58 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/16 01:10:16 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static size_t count_args_in_command(t_slnode *start, t_slnode *end)
 	return (count);
 }
 
-// TODO: Check for redirection syntax before calling this function
 static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 {
 	t_slnode *current = start;
@@ -87,26 +86,10 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 				redir->type = REDIR_APPEND;
 
 			current = current->next; // Move to the filename token
-			if (current && current != end)
-			{
-				t_token *file_token = (t_token *)current->data;
-				if (file_token->type == TOKEN_WORD)
-				{
-					redir->file_or_delim = ft_strdup(file_token->value);
-					if (!redir->file_or_delim)
-						return (redir_free(redir), cmd_free(cmd), NULL);
-				} else
-				{
-					// Invalid redirection syntax - filename expected
-					printf("Unexpected token near redirection\n");
-					return (redir_free(redir), cmd_free(cmd), NULL);
-				}
-			} else
-			{
-				// Missing filename for redirection
-				printf("Missing filename near redirection\n");
+			t_token *file_token = (t_token *)current->data;
+			redir->file_or_delim = ft_strdup(file_token->value);
+			if (!redir->file_or_delim)
 				return (redir_free(redir), cmd_free(cmd), NULL);
-			}
 
 			if (!sllist_append(cmd->redirs, redir))
 				return (redir_free(redir), cmd_free(cmd), NULL);
