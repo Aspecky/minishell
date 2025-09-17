@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 18:13:35 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 16:23:19 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/16 17:49:13 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/16 20:41:06 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-#define MINISHELL_H
+#ifndef EXECUTION_H
+#define EXECUTION_H
 
-extern char **environ;
-
-typedef struct s_main
-{
-	char **env;
-} t_main;
-
-int hook_signals(void);
+int ft_execvpe(const char *file, char *const argv[], char *const envp[]);
 
 #endif

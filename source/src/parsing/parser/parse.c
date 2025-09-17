@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 01:10:48 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/16 15:04:55 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_sllist *parse(char *stream)
 	tokens = tokenize(stream);
 	if (!tokens)
 		return (NULL);
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	if (!check_redirections(tokens))
 		return (sllist_free(tokens, token_free), NULL);
 	commands = tokens_to_commands(tokens);

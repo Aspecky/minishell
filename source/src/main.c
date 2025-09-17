@@ -6,20 +6,31 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 00:32:35 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/17 02:01:24 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SinglyLinkedList.h"
 #include "_debug.h"
+#include "execution.h"
+#include "ft_string.h"
 #include "minishell.h"
 #include "parser.h"
 #include "utils.h"
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 
+bool init_main(t_main *main)
+{
+	main->env = envdup();
+	if (!main->env)
+		return (false);
+	return (true);
+}
+
+// TODO: bash prompts in stderr not stdout
 int main(void)
 {
 	if (hook_signals() == -1)
@@ -28,9 +39,12 @@ int main(void)
 		return (EXIT_FAILURE);
 	}
 
+	t_main main;
 	t_sllist *commands;
 	char *line;
 
+	if (!init_main(&main))
+		return (perror("main"), EXIT_FAILURE);
 	line = 0;
 	while (true)
 	{
@@ -40,7 +54,7 @@ int main(void)
 		commands = parse(line);
 		if (!commands)
 		{
-			if (errno != EXIT_SUCCESS)
+			if (errno)
 				perror("parser");
 			continue;
 		}
