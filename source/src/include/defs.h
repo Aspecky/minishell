@@ -1,27 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution.h                                        :+:      :+:    :+:   */
+/*   defs.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 17:49:13 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/17 17:35:21 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/17 21:12:21 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTION_H
-#define EXECUTION_H
+#ifndef DEFS_H
+#define DEFS_H
 
 #include "SinglyLinkedList.h"
-#include <unistd.h>
-#include <stdbool.h>
+#include <stdint.h>
 
-#define STDIN STDIN_FILENO
-#define STDOUT STDOUT_FILENO
-#define STDERR STDERR_FILENO
+typedef enum e_redir_type : uint8_t {
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC
+} t_redir_type;
 
-int ft_execvpe(const char *file, char *const argv[], char *const envp[]);
-bool execute(t_sllist *commands, char *const envp[]);
+typedef struct s_redir {
+	t_redir_type type;
+	char *file_or_delim;
+	int here_doc_read;
+} t_redir;
+
+typedef struct s_cmd {
+	char **argv;
+	size_t argc;
+	int stdin;
+	int stdout;
+	t_sllist *redirs;
+} t_cmd;
+
+typedef struct s_main {
+	char **env;
+	t_sllist *commands;
+} t_main;
 
 #endif

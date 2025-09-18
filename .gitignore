@@ -1,3 +1,11 @@
+# Files with no extensions
+*
+!*/
+!*.*
+!Makefile
+
+# Config
+.vscode
 .clangd
 
 # Prerequisites

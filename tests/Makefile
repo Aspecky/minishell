@@ -9,6 +9,7 @@ BIN_BONUS := $(BIN)_bonus
 CFLAGS := -Wall -Wextra -fsanitize=address -ggdb3 -O0
 
 all: $(BUILD_DIR) $(DEBUG_DIR)
+	rm -rf $(NAME)
 	make all -s -C $(BIN_DIR) "CFLAGS = $(CFLAGS)" "DDEBUG = 1"
 	cp $(BIN_DIR)/$(BIN) $(NAME)
 

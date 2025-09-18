@@ -6,12 +6,13 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/17 02:01:24 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/18 16:34:39 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SinglyLinkedList.h"
 #include "_debug.h"
+#include "defs.h"
 #include "execution.h"
 #include "ft_string.h"
 #include "minishell.h"
@@ -40,7 +41,6 @@ int main(void)
 	}
 
 	t_main main;
-	t_sllist *commands;
 	char *line;
 
 	if (!init_main(&main))
@@ -48,11 +48,11 @@ int main(void)
 	line = 0;
 	while (true)
 	{
-		line = rl_gets("minishell> ");
+		line = rl_gets(RL_PROMPT"> ");
 		if (!line)
 			break;
-		commands = parse(line);
-		if (!commands)
+		main.commands = parse(line);
+		if (!main.commands)
 		{
 			if (errno)
 				perror("parser");
@@ -60,10 +60,12 @@ int main(void)
 		}
 
 		// Print the parsed pipeline for debugging
-		print_pipeline(commands);
+		print_pipeline(main.commands);
 
+		execute(main.commands, main.env);
+		
 		// Free the pipeline resources
-		sllist_free(commands, cmd_free);
+		sllist_free(main.commands, cmd_free);
 	}
 	printf("exit\n");
 }

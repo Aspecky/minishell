@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 21:22:28 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:28:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/17 15:50:57 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,7 @@
 
 #include "SinglyLinkedList.h"
 #include <stdint.h>
-
-typedef enum e_redir_type : uint8_t {
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APPEND,
-	REDIR_HEREDOC
-} t_redir_type;
-
-typedef struct s_redir {
-	t_redir_type type;
-	char *file_or_delim;
-	int here_doc_read;
-} t_redir;
-
-typedef struct s_cmd {
-	char **argv;
-	size_t argc;
-	t_sllist *redirs;
-} t_cmd;
+#include "defs.h"
 
 t_sllist *parse(char *stream);
 t_sllist *tokens_to_commands(t_sllist *tokens);
