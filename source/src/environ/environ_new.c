@@ -1,57 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envdup.c                                           :+:      :+:    :+:   */
+/*   environ_new.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 16:27:23 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 17:18:40 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/19 01:53:32 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/19 02:13:53 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "environ.h"
 #include "ft_string.h"
-#include "utils.h"
 #include <stdlib.h>
 
 extern char **environ;
 
-void env_free(char **env, size_t len)
+t_environ *environ_new(void)
 {
-	size_t i;
-
-	i = 0;
-	while (i < len)
-	{
-		free(env[i]);
-		i++;
-	}
-	free(env);
-}
-
-char **envdup(void)
-{
-	char **env;
+	t_environ *env;
 	size_t len;
 	size_t i;
+	char *dup;
 
 	len = 0;
 	while (environ[len])
 		len++;
-	env = malloc(sizeof(char *) * (len + 1));
+	env = malloc(sizeof(t_environ));
 	if (!env)
 		return (0);
+	env->list = sllist_new();
+	env->arr = malloc(sizeof(char *) * (len + 1));
+	if (!env || !env->list || !env->arr)
+		return (free(env->list), free(env->arr), NULL);
 	i = 0;
 	while (i < len)
 	{
-		env[i] = ft_strdup(environ[i]);
-		if (!env[i])
-		{
-			env_free(env, i);
-			return (0);
-		}
-		i++;
+		dup = ft_strdup(environ[i]);
+		if (!dup || !sllist_append(env->list, dup))
+			return (free(dup), environ_free(env), NULL);
+		env->arr[i++] = dup;
 	}
-	env[i] = 0;
+	env->arr[i] = 0;
 	return (env);
 }

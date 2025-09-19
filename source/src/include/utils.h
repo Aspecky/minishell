@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 21:44:40 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 17:18:55 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/19 02:41:39 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,5 @@
 void init_sigaction(struct sigaction *act, void (*handler)(int));
 char *rl_gets(const char *prompt);
 void env_free(char **env, size_t len);
-char **envdup(void);
 
 #endif

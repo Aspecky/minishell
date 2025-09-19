@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/17 21:12:21 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/19 02:15:03 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "SinglyLinkedList.h"
 #include <stdint.h>
+#include "environ.h"
 
 typedef enum e_redir_type : uint8_t {
 	REDIR_IN,
@@ -38,7 +39,8 @@ typedef struct s_cmd {
 } t_cmd;
 
 typedef struct s_main {
-	char **env;
+	t_environ *env;
+	// char **env;
 	t_sllist *commands;
 } t_main;
 

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 01:45:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 01:10:16 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/19 02:40:33 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,17 +100,12 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 	return (cmd);
 }
 
-t_sllist *tokens_to_commands(t_sllist *tokens)
+void tokens_to_commands(t_sllist *pipeline, t_sllist *tokens)
 {
-	t_sllist *pipeline;
 	t_slnode *current;
 	t_slnode *cmd_start;
 	t_token *token;
 	t_cmd *cmd;
-
-	pipeline = sllist_new();
-	if (!pipeline)
-		return (NULL);
 
 	cmd_start = tokens->head;
 	current = tokens->head;
@@ -123,12 +118,11 @@ t_sllist *tokens_to_commands(t_sllist *tokens)
 			// Create command from tokens between cmd_start and current
 			cmd = new_command_from_tokens(cmd_start, current);
 			if (!cmd)
-				return (sllist_free(pipeline, cmd_free), NULL);
+				(sllist_clear(pipeline, cmd_free));
 			if (!sllist_append(pipeline, cmd))
-				return (cmd_free(cmd), sllist_free(pipeline, cmd_free), NULL);
+				(cmd_free(cmd), sllist_clear(pipeline, cmd_free));
 			cmd_start = current->next;
 		}
 		current = current->next;
 	}
-	return (pipeline);
 }

@@ -6,15 +6,15 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/18 16:34:39 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/19 02:43:37 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SinglyLinkedList.h"
 #include "_debug.h"
 #include "defs.h"
+#include "environ.h"
 #include "execution.h"
-#include "ft_string.h"
 #include "minishell.h"
 #include "parser.h"
 #include "utils.h"
@@ -25,10 +25,17 @@
 
 bool init_main(t_main *main)
 {
-	main->env = envdup();
-	if (!main->env)
-		return (false);
+	main->commands = sllist_new();
+	main->env = environ_new();
+	if (!main->commands || !main->env)
+		return (free(main->commands), free(main->env), false);
 	return (true);
+}
+
+void clean_main(t_main *main)
+{
+	environ_free(main->env);
+	free(main->commands);
 }
 
 // TODO: bash prompts in stderr not stdout
@@ -48,11 +55,11 @@ int main(void)
 	line = 0;
 	while (true)
 	{
-		line = rl_gets(RL_PROMPT"> ");
+		line = rl_gets(RL_PROMPT "> ");
 		if (!line)
 			break;
-		main.commands = parse(line);
-		if (!main.commands)
+		parse(main.commands, line);
+		if (main.commands->size == 0)
 		{
 			if (errno)
 				perror("parser");
@@ -62,10 +69,11 @@ int main(void)
 		// Print the parsed pipeline for debugging
 		print_pipeline(main.commands);
 
-		execute(main.commands, main.env);
-		
+		execute(main.commands, main.env->arr);
+
 		// Free the pipeline resources
-		sllist_free(main.commands, cmd_free);
+		sllist_clear(main.commands, cmd_free);
 	}
+	clean_main(&main);
 	printf("exit\n");
 }
