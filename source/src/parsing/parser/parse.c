@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 17:02:37 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 17:13:47 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void parse(char *stream, char *const envp[], t_sllist *commands)
 	tokens = tokenize(stream);
 	if (!tokens)
 		return;
-	remove_quotes(tokens);
 	// print_tokens(tokens);
 	if (check_redirections(tokens))
 	{
+		remove_quotes(tokens);
 		tokens_to_commands(commands, tokens);
 		process_heredocs(commands);
 	}
