@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 01:16:50 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 17:05:25 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_cmd {
 
 typedef struct s_main {
 	t_environ *env;
-	// char **env;
+	char *input;
 	t_sllist *commands;
 } t_main;
 

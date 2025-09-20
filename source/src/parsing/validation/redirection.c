@@ -6,12 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 00:37:36 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 01:22:32 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "validation.h"
+#include "parsing.h"
 #include <stdio.h>
 
 bool check_redirections(t_sllist *tokens)

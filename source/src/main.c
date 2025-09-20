@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 17:03:24 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "environ.h"
 #include "execution.h"
 #include "minishell.h"
-#include "parser.h"
+#include "parsing.h"
 #include "signal_hooks.h"
 #include "utils.h"
 #include <errno.h>
@@ -26,6 +26,7 @@
 
 bool init_main(t_main *main)
 {
+	main->input = 0;
 	main->commands = sllist_new();
 	main->env = environ_new();
 	if (!main->commands || !main->env)
@@ -49,17 +50,15 @@ int main(void)
 	}
 
 	t_main main;
-	char *line;
 
 	if (!init_main(&main))
 		return (perror("main"), EXIT_FAILURE);
-	line = 0;
 	while (true)
 	{
-		line = rl_gets(RL_PROMPT "> ");
-		if (!line)
+		main.input = rl_gets(RL_PROMPT "> ");
+		if (!main.input)
 			break;
-		parse(line, main.env->arr, main.commands);
+		parse(main.input, main.env->arr, main.commands);
 		if (main.commands->size == 0)
 		{
 			if (errno)
