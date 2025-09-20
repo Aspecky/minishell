@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 21:08:28 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:27:02 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 01:22:38 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef enum e_token_type : uint8_t {
 	TOKEN_REDIRECT_IN,
 	TOKEN_REDIRECT_OUT,
 	TOKEN_REDIRECT_APPEND,
+	TOKEN_HEREDOC,
 	TOKEN_EOF
 } t_token_type;
 

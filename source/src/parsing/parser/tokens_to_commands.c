@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 01:45:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 02:40:33 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 17:01:33 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 
 	while (current && current != end)
 	{
-		token = (t_token *)current->data;
+		token = current->data;
 		if (token->type == TOKEN_WORD)
 		{
 			cmd->argv[cmd->argc] = ft_strdup(token->value);
@@ -71,7 +71,8 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 		// Handle redirection tokens and their arguments
 		else if (token->type == TOKEN_REDIRECT_IN ||
 				 token->type == TOKEN_REDIRECT_OUT ||
-				 token->type == TOKEN_REDIRECT_APPEND)
+				 token->type == TOKEN_REDIRECT_APPEND ||
+				 token->type == TOKEN_HEREDOC)
 		{
 			redir = redir_new(0, 0);
 			if (!redir)
@@ -84,10 +85,12 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 				redir->type = REDIR_OUT;
 			else if (token->type == TOKEN_REDIRECT_APPEND)
 				redir->type = REDIR_APPEND;
+			else if (token->type == TOKEN_HEREDOC)
+				redir->type = REDIR_HEREDOC;
 
 			current = current->next; // Move to the filename token
-			t_token *file_token = (t_token *)current->data;
-			redir->file_or_delim = ft_strdup(file_token->value);
+			token = current->data;
+			redir->file_or_delim = ft_strdup(token->value);
 			if (!redir->file_or_delim)
 				return (redir_free(redir), cmd_free(cmd), NULL);
 

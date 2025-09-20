@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 02:15:03 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 01:16:50 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 #define DEFS_H
 
 #include "SinglyLinkedList.h"
-#include <stdint.h>
 #include "environ.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 typedef enum e_redir_type : uint8_t {
 	REDIR_IN,
@@ -27,7 +28,7 @@ typedef enum e_redir_type : uint8_t {
 typedef struct s_redir {
 	t_redir_type type;
 	char *file_or_delim;
-	int here_doc_read;
+	bool was_delim_quoted;
 } t_redir;
 
 typedef struct s_cmd {

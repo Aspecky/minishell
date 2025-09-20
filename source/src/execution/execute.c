@@ -6,12 +6,13 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/18 17:23:06 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 15:51:45 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
 #include "execution.h"
+#include "signal_hooks.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,7 +78,8 @@ bool execute(t_sllist *commands, char *const envp[])
 		cmd = current->data;
 		next = current->next;
 
-		cmd->stdin = prev_stdin;
+		if (cmd->stdin == STDIN)
+			cmd->stdin = prev_stdin;
 		if (next)
 		{
 			pipe(fds);
@@ -103,6 +105,7 @@ bool execute(t_sllist *commands, char *const envp[])
 				close(fds[STDIN]);
 				close(fds[STDOUT]);
 			}
+			hook_child_signals();
 			if (ft_execvpe(cmd->argv[0], cmd->argv, envp) == -1)
 				return (perror("execute"), exit(EXIT_FAILURE), false);
 		}

@@ -1,37 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_redir.c                                          :+:      :+:    :+:   */
+/*   quoting.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 16:12:17 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 01:16:59 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/19 21:09:03 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/19 21:32:32 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include <stdlib.h>
+#ifndef QUOTING_H
+#define QUOTING_H
 
-t_redir *redir_new(t_redir_type type, char *file_or_delim)
-{
-	t_redir *redir;
+#include "SinglyLinkedList.h"
 
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (0);
-	redir->type = type;
-	redir->file_or_delim = file_or_delim;
-	return (redir);
-}
+void remove_quotes(t_sllist *tokens);
 
-void redir_free(void *ptr)
-{
-	t_redir *redir;
-	
-	redir = ptr;
-	if (!redir)
-		return ;
-	free(redir->file_or_delim);
-	free(redir);
-}
+#endif

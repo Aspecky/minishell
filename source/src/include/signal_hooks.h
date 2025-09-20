@@ -1,37 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_redir.c                                          :+:      :+:    :+:   */
+/*   signal_hooks.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 16:12:17 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 01:16:59 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/19 15:46:34 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/19 15:58:39 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include <stdlib.h>
+#ifndef SIGNAL_HOOKS_H
+#define SIGNAL_HOOKS_H
 
-t_redir *redir_new(t_redir_type type, char *file_or_delim)
-{
-	t_redir *redir;
+#include <signal.h>
+#include <stdbool.h>
 
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (0);
-	redir->type = type;
-	redir->file_or_delim = file_or_delim;
-	return (redir);
-}
+void init_sigaction(struct sigaction *act, void (*handler)(int));
+bool hook_main_signals(void);
+bool hook_child_signals(void);
 
-void redir_free(void *ptr)
-{
-	t_redir *redir;
-	
-	redir = ptr;
-	if (!redir)
-		return ;
-	free(redir->file_or_delim);
-	free(redir);
-}
+#endif

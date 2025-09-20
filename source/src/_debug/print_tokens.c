@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:00:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:32:06 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 01:26:27 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static const char *token_type_to_string(t_token_type type)
 			return "WORD";
 		case TOKEN_PIPE:
 			return "PIPE";
+		case TOKEN_HEREDOC:
+			return "HEREDOC";
 		case TOKEN_REDIRECT_IN:
 			return "REDIRECT_IN";
 		case TOKEN_REDIRECT_OUT:

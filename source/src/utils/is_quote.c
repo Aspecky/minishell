@@ -1,37 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_redir.c                                          :+:      :+:    :+:   */
+/*   is_quote.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 16:12:17 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 01:16:59 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/19 22:05:45 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/19 22:06:45 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include <stdlib.h>
+#include "utils.h"
 
-t_redir *redir_new(t_redir_type type, char *file_or_delim)
+int is_quote(int c)
 {
-	t_redir *redir;
-
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (0);
-	redir->type = type;
-	redir->file_or_delim = file_or_delim;
-	return (redir);
-}
-
-void redir_free(void *ptr)
-{
-	t_redir *redir;
-	
-	redir = ptr;
-	if (!redir)
-		return ;
-	free(redir->file_or_delim);
-	free(redir);
+	return (c == '\'' || c == '"');
 }

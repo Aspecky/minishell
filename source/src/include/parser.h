@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 21:22:28 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 02:38:38 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 17:02:41 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <stdint.h>
 #include "defs.h"
 
-void parse(t_sllist *commands, char *stream);
+void parse(char *stream, char *const envp[], t_sllist *commands);
 void tokens_to_commands(t_sllist *pipeline, t_sllist *tokens);
 
 t_cmd *cmd_new(char **argv, size_t argc, t_sllist *redirs);

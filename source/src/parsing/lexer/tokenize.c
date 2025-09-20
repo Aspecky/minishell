@@ -6,13 +6,14 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 00:00:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/15 21:39:28 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 15:34:17 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ctype.h"
 #include "ft_string.h"
 #include "lexer.h"
+#include "utils.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,69 +23,34 @@ static bool is_special_char(char c)
 	return (c == '|' || c == '<' || c == '>');
 }
 
-size_t count_word_length(const char *stream)
+char *extract_word(char **stream)
 {
+	char *word;
 	char *ptr;
 	char quote;
 	size_t len;
-	size_t spn;
 
-	len = 0;
-	while (*stream && !ft_isspace(*stream) && !is_special_char(*stream))
+	ptr = *stream;
+	while (*ptr && !ft_isspace(*ptr) && !is_special_char(*ptr))
 	{
-		if (*stream == '\'' || *stream == '"')
+		if (is_quote(*ptr))
 		{
-			quote = *stream;
-			ptr = ft_strchr(++stream, quote);
-			len += ptr - stream;
-			stream = ptr + 1;
+			quote = *ptr++;
+			while (*ptr && *ptr != quote)
+				ptr++;
+			if (*ptr == quote)
+				ptr++;
 		} else
-		{
-			spn = ft_strcspn(stream, "\t \"\'<>|");
-			len += spn;
-			stream += spn;
-		}
+			ptr++;
 	}
-	return (len);
-}
-
-static char *extract_complete_word(char **stream)
-{
-	char *result = NULL;
-	size_t total_len = 0;
-
-	result = malloc(count_word_length(*stream) + 1);
-	if (!result)
-		return (NULL);
-
-	while (**stream && !ft_isspace(**stream) && !is_special_char(**stream))
-	{
-		if (**stream == '\'' || **stream == '"')
-		{
-			// Extract quoted part
-			char quote = **stream;
-			(*stream)++; // Skip opening quote
-
-			while (**stream && **stream != quote)
-			{
-				result[total_len++] = **stream;
-				(*stream)++;
-			}
-			(*stream)++; // Skip closing quote
-		} else
-		{
-			// Extract unquoted part
-			while (**stream && !ft_isspace(**stream) &&
-				   !is_special_char(**stream) && **stream != '\'' &&
-				   **stream != '"')
-			{
-				result[total_len++] = **stream;
-				(*stream)++;
-			}
-		}
-	}
-	result[total_len] = '\0';
-	return (result);
+	len = ptr - *stream;
+	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
+		return (0);
+	ft_memcpy(word, *stream, len);
+	word[len] = 0;
+	*stream = ptr;
+	return (word);
 }
 
 t_sllist *tokenize(char *stream)
@@ -114,9 +80,17 @@ t_sllist *tokenize(char *stream)
 		// Handle redirections
 		else if (*stream == '<')
 		{
-			type = TOKEN_REDIRECT_IN;
-			value = ft_strdup("<");
-			stream++;
+			if (*(stream + 1) == '<')
+			{
+				type = TOKEN_HEREDOC;
+				value = ft_strdup("<<");
+				stream += 2;
+			} else
+			{
+				type = TOKEN_REDIRECT_IN;
+				value = ft_strdup("<");
+				stream++;
+			}
 		} else if (*stream == '>')
 		{
 			if (*(stream + 1) == '>')
@@ -135,7 +109,7 @@ t_sllist *tokenize(char *stream)
 		else
 		{
 			type = TOKEN_WORD;
-			value = extract_complete_word(&stream);
+			value = extract_word(&stream);
 		}
 
 		// Create token and add to list (only if we have a valid type)

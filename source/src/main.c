@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 02:43:37 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 17:03:24 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "execution.h"
 #include "minishell.h"
 #include "parser.h"
+#include "signal_hooks.h"
 #include "utils.h"
 #include <errno.h>
 #include <stdbool.h>
@@ -41,7 +42,7 @@ void clean_main(t_main *main)
 // TODO: bash prompts in stderr not stdout
 int main(void)
 {
-	if (hook_signals() == -1)
+	if (!hook_main_signals())
 	{
 		perror("sigaction");
 		return (EXIT_FAILURE);
@@ -58,7 +59,7 @@ int main(void)
 		line = rl_gets(RL_PROMPT "> ");
 		if (!line)
 			break;
-		parse(main.commands, line);
+		parse(line, main.env->arr, main.commands);
 		if (main.commands->size == 0)
 		{
 			if (errno)
@@ -66,12 +67,10 @@ int main(void)
 			continue;
 		}
 
-		// Print the parsed pipeline for debugging
-		print_pipeline(main.commands);
+		// print_pipeline(main.commands);
 
 		execute(main.commands, main.env->arr);
 
-		// Free the pipeline resources
 		sllist_clear(main.commands, cmd_free);
 	}
 	clean_main(&main);
