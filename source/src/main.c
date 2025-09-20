@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 17:06:06 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "environ.h"
 #include "execution.h"
 #include "minishell.h"
-#include "parser.h"
+#include "parsing.h"
 #include "signal_hooks.h"
 #include "utils.h"
 #include <errno.h>

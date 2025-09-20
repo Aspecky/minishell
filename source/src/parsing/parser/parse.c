@@ -6,16 +6,13 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 17:13:47 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "_debug.h"
 #include "execution.h"
-#include "lexer.h"
-#include "parser.h"
-#include "quoting.h"
-#include "validation.h"
+#include "parsing.h"
 #include <stdbool.h>
 
 void parse(char *stream, char *const envp[], t_sllist *commands)

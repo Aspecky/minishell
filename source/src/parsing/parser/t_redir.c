@@ -6,11 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 16:12:17 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 01:16:59 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "parsing.h"
 #include <stdlib.h>
 
 t_redir *redir_new(t_redir_type type, char *file_or_delim)

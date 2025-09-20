@@ -6,12 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:07:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 21:53:36 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "quoting.h"
+#include "parsing.h"
 
 void remove_str_quotes(char *str)
 {
