@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:56:33 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 21:29:45 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:34:27 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static size_t get_variable_name_length(char *str)
 	size_t len;
 
 	len = 0;
-	while (str[len] && !is_word_separator(str[len]) && str[len] != '\"' && str[len] != '$')
+	while (str[len] && !is_word_separator(str[len]) && str[len] != '\"' &&
+		   str[len] != '$')
 		len++;
 	return (len);
 }
@@ -67,15 +68,15 @@ static size_t count_expantion_length(char *str, char *const envp[])
 				// $ followed by word separator, keep the $
 				len++;
 				str++;
-			}
-			else
+			} else
 			{
 				tmp = str[1 + var_len];
 				str[1 + var_len] = 0;
 				param = getenv_r(str + 1, envp);
 				if (param)
 					len += ft_strlen(param);
-				// else: variable not found, expand to nothing (contribute 0 bytes)
+				// else: variable not found, expand to nothing (contribute 0
+				// bytes)
 				str[1 + var_len] = tmp;
 				str += 1 + var_len;
 			}
@@ -117,8 +118,7 @@ char *expand_word(char *str, char *const envp[])
 			{
 				// $ followed by word separator, keep the $
 				*word_ptr++ = *str++;
-			}
-			else
+			} else
 			{
 				tmp = str[1 + var_len];
 				str[1 + var_len] = 0;
@@ -129,7 +129,8 @@ char *expand_word(char *str, char *const envp[])
 					while (*param)
 						*word_ptr++ = *param++;
 				}
-				// else: variable not found, expand to nothing (don't copy anything)
+				// else: variable not found, expand to nothing (don't copy
+				// anything)
 				str[1 + var_len] = tmp;
 				str += 1 + var_len;
 			}
@@ -145,14 +146,17 @@ char *expand_word(char *str, char *const envp[])
 bool expand_words(t_sllist *tokens, char *const envp[])
 {
 	t_slnode *node;
+	t_slnode *prev;
 	t_token *token;
 	char *expanded;
 
 	node = tokens->head;
+	prev = 0;
 	while (node)
 	{
 		token = node->data;
-		if (token->type == TOKEN_WORD)
+		if (token->type == TOKEN_WORD &&
+			(prev && ((t_token *)(prev->data))->type != TOKEN_HEREDOC))
 		{
 			expanded = expand_word(token->value, envp);
 			if (!expanded)
@@ -160,6 +164,7 @@ bool expand_words(t_sllist *tokens, char *const envp[])
 			free(token->value);
 			token->value = expanded;
 		}
+		prev = node;
 		node = node->next;
 	}
 	return (true);
