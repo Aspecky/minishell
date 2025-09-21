@@ -6,12 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 01:14:36 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:15:12 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "_debug.h"
-#include "execution.h"
 #include "parsing.h"
 #include <stdbool.h>
 
@@ -31,7 +30,8 @@ void parse(char *stream, char *const envp[], t_sllist *commands)
 		expand_words(tokens, envp);
 		remove_quotes(tokens);
 		tokens_to_commands(commands, tokens);
-		process_heredocs(commands);
+		// print_pipeline(commands);
+		process_heredocs(commands, envp);
 	}
 	sllist_free(tokens, token_free);
 }

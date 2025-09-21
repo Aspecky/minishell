@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 01:07:12 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 22:25:33 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int main(void)
 			continue;
 		}
 
-		print_pipeline(main.commands);
+		// print_pipeline(main.commands);
 
 		execute(main.commands, main.env->arr);
 

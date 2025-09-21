@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:30:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 22:27:06 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void print_pipeline(const t_sllist *commands)
 							printf(">> %s", redir->file_or_delim);
 							break;
 						case REDIR_HEREDOC:
-							printf("<< %s", redir->file_or_delim);
+							printf("<< %s    quoted: %i", redir->file_or_delim, redir->was_quoted);
 							break;
 						}
 						printf("\n");

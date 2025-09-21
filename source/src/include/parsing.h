@@ -8,7 +8,7 @@
 
 /* External Definitions */
 void parse(char *stream, char *const envp[], t_sllist *commands);
-char *expand_word(char *str, char *const envp[]);
+char *expand_word(char *str, char *const envp[], void *len_ptr);
 
 /* Internal Definitions */
 typedef enum e_token_type : uint8_t {
@@ -24,6 +24,7 @@ typedef enum e_token_type : uint8_t {
 typedef struct s_token {
 	t_token_type type;
 	char *value;
+	bool was_quoted;
 } t_token;
 
 bool check_quotes_balance(const char *str);
@@ -32,6 +33,7 @@ bool check_redirections(t_sllist *tokens);
 bool expand_words(t_sllist *tokens, char *const envp[]);
 void remove_quotes(t_sllist *tokens);
 void tokens_to_commands(t_sllist *pipeline, t_sllist *tokens);
+bool process_heredocs(t_sllist *commands, char *const envp[]);
 
 int is_word_separator(int c);
 int is_quote(int c);

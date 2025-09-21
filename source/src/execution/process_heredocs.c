@@ -6,22 +6,25 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 15:59:37 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:12:58 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
-#include "execution.h"
 #include "ft_stdio.h"
 #include "ft_string.h"
+#include "parsing.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir)
+bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 {
 	int fd[2];
 	t_lninfo lninfo;
 	ssize_t len;
 	size_t delim_len;
+	char *line;
 
 	if (pipe(fd) == -1)
 		return (false);
@@ -35,9 +38,19 @@ bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir)
 			((size_t)len - 1 == delim_len &&
 			 ft_strncmp(lninfo.line, redir->file_or_delim, delim_len) == 0))
 			break;
-		if (write(fd[STDOUT], lninfo.line, (size_t)len) == -1)
-			return (close(fd[0]), close(fd[1]), free(lninfo.line),
+		line = lninfo.line;
+		if (!redir->was_quoted)
+		{
+			// TODO: Cleanup on error
+			line = expand_word(lninfo.line, envp, &len);
+			if (!line)
+				return (false);
+		}
+		if (write(fd[STDOUT], line, (size_t)len) == -1)
+			return (close(fd[0]), close(fd[1]), free(line),
 					free(lninfo.store), false);
+		if (!redir->was_quoted)
+			free(line);
 	}
 	(free(lninfo.line), free(lninfo.store));
 	close(fd[STDOUT]);
@@ -47,7 +60,7 @@ bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir)
 	return (true);
 }
 
-bool process_heredocs(t_sllist *commands)
+bool process_heredocs(t_sllist *commands, char *const envp[])
 {
 	t_slnode *cmd_node;
 	t_slnode *redir_node;
@@ -64,7 +77,7 @@ bool process_heredocs(t_sllist *commands)
 			redir = redir_node->data;
 			if (redir->type == REDIR_HEREDOC)
 			{
-				process_cmd_heredoc(cmd, redir);
+				process_cmd_heredoc(cmd, redir, envp);
 			}
 			redir_node = redir_node->next;
 		}

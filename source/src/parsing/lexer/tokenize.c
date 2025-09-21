@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 00:00:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 22:28:49 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:13:34 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static bool is_special_char(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
 
 char *extract_word(char **stream)
 {

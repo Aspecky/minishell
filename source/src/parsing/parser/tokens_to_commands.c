@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 01:45:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:42:33 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 			if (!redir)
 				return (cmd_free(cmd), NULL);
 
-			// Set redirection type based on token type
+				// Set redirection type based on token type
 			if (token->type == TOKEN_REDIRECT_IN)
 				redir->type = REDIR_IN;
 			else if (token->type == TOKEN_REDIRECT_OUT)
@@ -89,6 +89,7 @@ static t_cmd *new_command_from_tokens(t_slnode *start, t_slnode *end)
 
 			current = current->next; // Move to the filename token
 			token = current->data;
+			redir->was_quoted = token->was_quoted;
 			redir->file_or_delim = ft_strdup(token->value);
 			if (!redir->file_or_delim)
 				return (redir_free(redir), cmd_free(cmd), NULL);

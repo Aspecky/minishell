@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 01:41:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:39:40 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_token *token_new(t_token_type type, char *value)
 		return (0);
 	token->type = type;
 	token->value = value;
+	token->was_quoted = false;
 	return (token);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:56:33 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 21:34:27 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:12:32 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,15 @@ static size_t count_expantion_length(char *str, char *const envp[])
 	return (len);
 }
 
-char *expand_word(char *str, char *const envp[])
+char *expand_word(char *str, char *const envp[], void *len_ptr)
 {
 	char *word;
 	char *word_ptr;
 	size_t len;
 
 	len = count_expantion_length(str, envp);
+	if (len_ptr)
+		*((size_t *)len_ptr) = len;
 	word = malloc(sizeof(char) * (len + 1));
 	if (!word)
 		return (0);
@@ -158,7 +160,7 @@ bool expand_words(t_sllist *tokens, char *const envp[])
 		if (token->type == TOKEN_WORD &&
 			(prev && ((t_token *)(prev->data))->type != TOKEN_HEREDOC))
 		{
-			expanded = expand_word(token->value, envp);
+			expanded = expand_word(token->value, envp, 0);
 			if (!expanded)
 				return (false);
 			free(token->value);

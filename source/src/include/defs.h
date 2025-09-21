@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 17:05:25 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:42:33 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef enum e_redir_type : uint8_t {
 typedef struct s_redir {
 	t_redir_type type;
 	char *file_or_delim;
-	bool was_delim_quoted;
+	bool was_quoted;
 } t_redir;
 
 typedef struct s_cmd {

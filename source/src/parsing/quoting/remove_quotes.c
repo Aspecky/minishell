@@ -6,24 +6,27 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:07:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 21:39:34 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void remove_str_quotes(char *str)
+bool remove_str_quotes(char *str)
 {
 	size_t i;
 	size_t j;
 	char quote;
+	bool was_quoted;
 
+	was_quoted = false;
 	i = 0;
 	j = 0;
 	while (str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
+			was_quoted = true;
 			quote = str[i];
 			i++; // Skip opening quote
 			while (str[i] && str[i] != quote)
@@ -34,6 +37,7 @@ void remove_str_quotes(char *str)
 			str[j++] = str[i++];
 	}
 	str[j] = '\0';
+	return (was_quoted);
 }
 
 void remove_quotes(t_sllist *tokens)
@@ -46,7 +50,7 @@ void remove_quotes(t_sllist *tokens)
 	{
 		token = node->data;
 		if (token->type == TOKEN_WORD)
-			remove_str_quotes(token->value);
+			token->was_quoted = remove_str_quotes(token->value);
 		node = node->next;
 	}
 }
