@@ -8,6 +8,7 @@
 
 /* External Definitions */
 void parse(char *stream, char *const envp[], t_sllist *commands);
+char *expand_word(char *str, char *const envp[]);
 
 /* Internal Definitions */
 typedef enum e_token_type : uint8_t {
@@ -25,14 +26,15 @@ typedef struct s_token {
 	char *value;
 } t_token;
 
+bool check_quotes_balance(const char *str);
 t_sllist *tokenize(char *stream);
-
+bool check_redirections(t_sllist *tokens);
+bool expand_words(t_sllist *tokens, char *const envp[]);
+void remove_quotes(t_sllist *tokens);
 void tokens_to_commands(t_sllist *pipeline, t_sllist *tokens);
 
-void remove_quotes(t_sllist *tokens);
-
-bool check_quotes_balance(const char *str);
-bool check_redirections(t_sllist *tokens);
+int is_word_separator(int c);
+int is_quote(int c);
 
 // Objects
 t_token *token_new(t_token_type type, char *value);

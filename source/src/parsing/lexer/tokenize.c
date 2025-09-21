@@ -6,14 +6,13 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 00:00:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/20 22:28:49 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ctype.h"
 #include "ft_string.h"
 #include "parsing.h"
-#include "utils.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +30,7 @@ char *extract_word(char **stream)
 	size_t len;
 
 	ptr = *stream;
-	while (*ptr && !ft_isspace(*ptr) && !is_special_char(*ptr))
+	while (*ptr && !is_word_separator(*ptr))
 	{
 		if (is_quote(*ptr))
 		{

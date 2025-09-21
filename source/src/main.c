@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 01:07:12 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void clean_main(t_main *main)
 // TODO: bash prompts in stderr not stdout
 int main(void)
 {
+
 	if (!hook_main_signals())
 	{
 		perror("sigaction");
@@ -53,6 +54,16 @@ int main(void)
 
 	if (!init_main(&main))
 		return (perror("main"), EXIT_FAILURE);
+
+	// {
+	// 	// char str[] = " \"$var\"$var$PATH";
+	// 	char str[] = "$var$PATH";
+	// 	char *ptr = expand_word(str, main.env->arr);
+	// 	printf("'%s'\n", ptr);
+	// 	free(ptr);
+	// 	clean_main(&main);
+	// 	return (0);
+	// }
 	while (true)
 	{
 		main.input = rl_gets(RL_PROMPT "> ");
@@ -66,7 +77,7 @@ int main(void)
 			continue;
 		}
 
-		// print_pipeline(main.commands);
+		print_pipeline(main.commands);
 
 		execute(main.commands, main.env->arr);
 

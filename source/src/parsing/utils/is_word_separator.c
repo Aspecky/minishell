@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_quote.c                                         :+:      :+:    :+:   */
+/*   is_word_separator.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 22:05:45 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 22:06:45 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/20 22:22:38 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/20 22:26:32 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#include "parsing.h"
+#include "ft_ctype.h"
 
-int is_quote(int c)
+int is_word_separator(int c)
 {
-	return (c == '\'' || c == '"');
+	return (ft_isspace(c) || (c == '|' || c == '<' || c == '>'));
 }
