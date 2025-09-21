@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 15:51:45 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:16:38 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,26 @@ bool setup_cmd_io(t_cmd *cmd)
 		redir = node->data;
 		if (redir->type == REDIR_IN)
 		{
-			if (cmd->stdin != STDIN)
-				close(cmd->stdin);
-			cmd->stdin = open(redir->file_or_delim, O_RDONLY);
-			if (cmd->stdin == -1)
+			if (cmd->stdin_fd != STDIN)
+				close(cmd->stdin_fd);
+			cmd->stdin_fd = open(redir->file_or_delim, O_RDONLY);
+			if (cmd->stdin_fd == -1)
 				return (perror("redirection <"), false);
 		} else if (redir->type == REDIR_OUT)
 		{
-			if (cmd->stdout != STDOUT)
-				close(cmd->stdout);
-			cmd->stdout =
+			if (cmd->stdout_fd != STDOUT)
+				close(cmd->stdout_fd);
+			cmd->stdout_fd =
 				open(redir->file_or_delim, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (cmd->stdout == -1)
+			if (cmd->stdout_fd == -1)
 				return (perror("redirection >"), false);
 		} else if (redir->type == REDIR_APPEND)
 		{
-			if (cmd->stdout != STDOUT)
-				close(cmd->stdout);
-			cmd->stdout =
+			if (cmd->stdout_fd != STDOUT)
+				close(cmd->stdout_fd);
+			cmd->stdout_fd =
 				open(redir->file_or_delim, O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (!cmd->stdout)
+			if (!cmd->stdout_fd)
 				return (perror("redirection >>"), false);
 		}
 		node = node->next;
@@ -78,27 +78,27 @@ bool execute(t_sllist *commands, char *const envp[])
 		cmd = current->data;
 		next = current->next;
 
-		if (cmd->stdin == STDIN)
-			cmd->stdin = prev_stdin;
+		if (cmd->stdin_fd == STDIN)
+			cmd->stdin_fd = prev_stdin;
 		if (next)
 		{
 			pipe(fds);
-			cmd->stdout = dup(fds[STDOUT]);
+			cmd->stdout_fd = dup(fds[STDOUT]);
 		}
 		pid = fork();
 		if (pid == 0)
 		{
 			if (!setup_cmd_io(cmd))
 				exit(EXIT_FAILURE);
-			if (cmd->stdin != STDIN)
+			if (cmd->stdin_fd != STDIN)
 			{
-				dup2(cmd->stdin, STDIN);
-				close(cmd->stdin);
+				dup2(cmd->stdin_fd, STDIN);
+				close(cmd->stdin_fd);
 			}
-			if (cmd->stdout != STDOUT)
+			if (cmd->stdout_fd != STDOUT)
 			{
-				dup2(cmd->stdout, STDOUT);
-				close(cmd->stdout);
+				dup2(cmd->stdout_fd, STDOUT);
+				close(cmd->stdout_fd);
 			}
 			if (next)
 			{
@@ -115,7 +115,7 @@ bool execute(t_sllist *commands, char *const envp[])
 		{
 			prev_stdin = fds[STDIN];
 			close(fds[STDOUT]);
-			close(cmd->stdout);
+			close(cmd->stdout_fd);
 		}
 		current = next;
 	}

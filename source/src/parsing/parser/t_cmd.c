@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:47 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:16:49 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ t_cmd *cmd_new(char **argv, size_t argc, t_sllist *redirs)
 	cmd->redirs = redirs;
 	cmd->argv = argv;
 	cmd->argc = argc;
-	cmd->stdin = STDIN;
-	cmd->stdout = STDOUT;
+	cmd->stdin_fd = STDIN;
+	cmd->stdout_fd = STDOUT;
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 21:42:33 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:15:59 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ typedef struct s_redir {
 typedef struct s_cmd {
 	char **argv;
 	size_t argc;
-	int stdin;
-	int stdout;
+	int stdin_fd;
+	int stdout_fd;
 	t_sllist *redirs;
 } t_cmd;
 

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 23:12:58 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:17:07 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 	}
 	(free(lninfo.line), free(lninfo.store));
 	close(fd[STDOUT]);
-	if (cmd->stdin != STDIN)
-		close(cmd->stdin);
-	cmd->stdin = fd[STDIN];
+	if (cmd->stdin_fd != STDIN)
+		close(cmd->stdin_fd);
+	cmd->stdin_fd = fd[STDIN];
 	return (true);
 }
 
