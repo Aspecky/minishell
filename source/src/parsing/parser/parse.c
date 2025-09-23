@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 23:15:12 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/23 22:19:39 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void parse(char *stream, char *const envp[], t_sllist *commands)
 	if (!tokens)
 		return;
 	// print_tokens(tokens);
-	if (check_redirections(tokens))
+	if (tokens->size > 1 && check_redirections(tokens))
 	{
 		expand_words(tokens, envp);
 		remove_quotes(tokens);

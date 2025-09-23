@@ -4,11 +4,12 @@
 #include "SinglyLinkedList.h"
 #include "defs.h"
 #include <stdbool.h>
-#include <stdint.h>
+#include <stddef.h>
+#include <sys/types.h>
 
 /* External Definitions */
 void parse(char *stream, char *const envp[], t_sllist *commands);
-char *expand_word(char *str, char *const envp[], void *len_ptr);
+char *param_expantion(char *str, char *const envp[]);
 
 /* Internal Definitions */
 typedef enum e_token_type : uint8_t {
@@ -34,8 +35,12 @@ bool expand_words(t_sllist *tokens, char *const envp[]);
 void remove_quotes(t_sllist *tokens);
 void tokens_to_commands(t_sllist *pipeline, t_sllist *tokens);
 bool process_heredocs(t_sllist *commands, char *const envp[]);
+char *tilde_expantion(char *str, char *const envp[]);
+
+char *heredoc_expantion(char *str, char *const envp[], ssize_t *len);
 
 int is_word_separator(int c);
+int is_metacharacter(int c);
 int is_quote(int c);
 
 // Objects

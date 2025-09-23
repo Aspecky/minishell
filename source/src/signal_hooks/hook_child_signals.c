@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 15:54:42 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/19 16:00:30 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/22 21:28:29 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 
 bool hook_child_signals(void)
 {
-	struct sigaction act;
-
 	rl_catch_signals = true;
-	init_sigaction(&act, SIG_DFL);
-	if (sigaction(SIGINT, &act, 0) == -1 || sigaction(SIGQUIT, &act, 0) == -1)
+	if (signal(SIGINT, SIG_DFL) == SIG_ERR ||
+		signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 		return (false);
 	return (true);
 }

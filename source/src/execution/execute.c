@@ -6,18 +6,20 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 23:16:38 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/22 21:31:24 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
 #include "execution.h"
+#include "minishell.h"
 #include "signal_hooks.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <errno.h>
 
 bool setup_cmd_io(t_cmd *cmd)
 {
@@ -69,8 +71,8 @@ bool execute(t_sllist *commands, char *const envp[])
 	int fds[2];
 	int pid;
 	int prev_stdin;
-	size_t i;
 
+	// is_executing = true;
 	prev_stdin = STDIN;
 	current = commands->head;
 	while (current)
@@ -119,8 +121,31 @@ bool execute(t_sllist *commands, char *const envp[])
 		}
 		current = next;
 	}
+
+	size_t i;
+	int wstatus;
+
 	i = 0;
 	while (i++ < commands->size)
-		wait(0);
+	{
+		if (wait(&wstatus) == -1)
+		{
+			printf("%i\n", errno);
+			perror("wait");
+			continue;
+		}
+		printf("'%s' wstatus: %i\n", cmd->argv[0], wstatus);
+		if (WIFEXITED(wstatus))
+		{
+			// printf("\tWEXITSTATUS: %i\n", WEXITSTATUS(wstatus));
+			g_last_exit_status = WEXITSTATUS(wstatus);
+		} else if (WIFSIGNALED(wstatus))
+		{
+			// printf("\tWTERMSIG: %i\n", WTERMSIG(wstatus));
+			g_last_exit_status = 128 + WTERMSIG(wstatus);
+		}
+	}
+	// is_executing = false;
+	// printf("last_exit_status: %i\n", g_last_exit_status);
 	return (true);
 }

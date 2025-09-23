@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_word_separator.c                                :+:      :+:    :+:   */
+/*   is_metacharacter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/20 22:22:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/23 20:14:58 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/23 20:11:15 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/23 20:13:47 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ctype.h"
 #include "parsing.h"
 
-int is_word_separator(int c)
+int is_metacharacter(int c)
 {
-	return (c == '|' || c == '<' || c == '>' || ft_isspace(c));
+	return (c == '|' || c == '&' || c == '(' || c == ')' || c == '<' ||
+			c == '>' || ft_isspace(c));
 }
