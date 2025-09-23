@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 22:25:33 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/23 22:03:37 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+bool is_executing = false;
+int g_last_exit_status = 0;
 
 bool init_main(t_main *main)
 {
@@ -54,16 +57,6 @@ int main(void)
 
 	if (!init_main(&main))
 		return (perror("main"), EXIT_FAILURE);
-
-	// {
-	// 	// char str[] = " \"$var\"$var$PATH";
-	// 	char str[] = "$var$PATH";
-	// 	char *ptr = expand_word(str, main.env->arr);
-	// 	printf("'%s'\n", ptr);
-	// 	free(ptr);
-	// 	clean_main(&main);
-	// 	return (0);
-	// }
 	while (true)
 	{
 		main.input = rl_gets(RL_PROMPT "> ");
@@ -80,7 +73,7 @@ int main(void)
 		// print_pipeline(main.commands);
 
 		execute(main.commands, main.env->arr);
-
+		printf("last exit: %i\n", g_last_exit_status);
 		sllist_clear(main.commands, cmd_free);
 	}
 	clean_main(&main);

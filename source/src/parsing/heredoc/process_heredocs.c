@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 23:17:07 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/23 22:01:55 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 		if (!redir->was_quoted)
 		{
 			// TODO: Cleanup on error
-			line = expand_word(lninfo.line, envp, &len);
+			line = heredoc_expantion(lninfo.line, envp, &len);
 			if (!line)
 				return (false);
 		}
