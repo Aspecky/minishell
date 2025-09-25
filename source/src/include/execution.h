@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 17:49:13 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 20:38:13 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/25 22:18:28 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 #define EXECUTION_H
 
 #include "SinglyLinkedList.h"
-#include <unistd.h>
-#include <stdbool.h>
-#include "ft_stdio.h"
 #include "defs.h"
 #include "environ.h"
+#include <stdbool.h>
+#include <unistd.h>
 
 int ft_execvpe(const char *file, char *const argv[], char *const envp[]);
 bool execute(t_sllist *commands, t_environ *env);

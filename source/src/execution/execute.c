@@ -6,15 +6,16 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 06:00:49 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/25 22:18:45 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
+#include "environ.h"
 #include "execution.h"
+#include "ft_stdio.h"
 #include "minishell.h"
 #include "signal_hooks.h"
-#include "environ.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,8 +80,6 @@ bool setup_cmd_io(t_cmd *cmd, int fds[2], bool close_pipe)
 	return (true);
 }
 
-
-
 bool wait_on_children(size_t children_count, pid_t last_pid)
 {
 	int wstatus;
@@ -128,12 +127,25 @@ bool execute(t_sllist *commands, t_environ *env)
 			pipe(fds);
 			cmd->stdout_fd = dup(fds[STDOUT]);
 		}
-
 		if (commands->size == 1 && is_builtin(cmd->argv[0]))
 		{
+			if (!open_cmd_redirs(cmd))
+				return (false);
+
+			// Save original file descriptors
+			int saved_stdin = dup(STDIN_FILENO);
+			int saved_stdout = dup(STDOUT_FILENO);
+
+			// Setup redirection for the builtin
+			setup_cmd_io(cmd, fds, false);
 			g_last_exit_status = run_builtin(cmd, env);
-		}
-		else
+
+			// Restore original file descriptors
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
+		} else
 		{
 			pid = fork();
 			if (pid == -1)
