@@ -2,6 +2,7 @@
 #define PARSING_H
 
 #include "SinglyLinkedList.h"
+#include "Vector.h"
 #include "defs.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -10,6 +11,7 @@
 /* External Definitions */
 void parse(char *stream, char *const envp[], t_sllist *commands);
 char *param_expantion(char *str, char *const envp[]);
+char *expand_variable(char **str, char *const envp[], t_vector *vector);
 
 /* Internal Definitions */
 typedef enum e_token_type : uint8_t {

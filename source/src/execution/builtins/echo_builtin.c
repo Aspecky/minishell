@@ -1,22 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_builtin.c                                       :+:      :+:    :+:   */
+/*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 16:06:33 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 16:11:24 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/24 15:14:12 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/25 05:36:42 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "execution.h"
 #include "ft_string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-bool is_builtin(const char *str)
+int echo_builtin(int ac, char *av[])
 {
-	return (ft_strcmp(str, "echo") == 0 || ft_strcmp(str, "cd") == 0 ||
-			ft_strcmp(str, "pwd") == 0 || ft_strcmp(str, "export") == 0 ||
-			ft_strcmp(str, "unset") == 0 || ft_strcmp(str, "env") == 0 ||
-			ft_strcmp(str, "exit") == 0);
+	bool print_nl;
+	int i;
+
+	print_nl = true;
+	i = 1;
+	while (i < ac && ft_strcmp(av[i], "-n") == 0)
+	{
+		print_nl = false;
+		i++;
+	}
+	while (i < ac)
+	{
+		printf("%s", av[i]);
+		if (i + 1 < ac)
+			printf(" ");
+		i++;
+	}
+	if (print_nl)
+		printf("\n");
+	return (EXIT_SUCCESS);
 }

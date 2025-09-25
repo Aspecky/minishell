@@ -1,20 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_sigaction.c                                   :+:      :+:    :+:   */
+/*   environ_list_to_envp.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 21:47:47 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 16:52:44 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/25 16:54:34 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/25 17:16:22 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "signal_hooks.h"
+#include "environ.h"
+#include <stdlib.h>
 
-void init_sigaction(struct sigaction *act, void (*handler)(int))
+char **environ_list_to_envp(t_sllist *list)
 {
-	act->sa_handler = handler;
-	sigemptyset(&act->sa_mask);
-	act->sa_flags = 0;
+	char **envp;
+	t_slnode *node;
+	size_t i;
+
+	envp = malloc(sizeof(char *) * (list->size + 1));
+	if (!envp)
+		return (0);
+	node = list->head;
+	i = 0;
+	while (i < list->size)
+	{
+		envp[i] = node->data;
+		node = node->next;
+		i++;
+	}
+	envp[i] = 0;
+	return (envp);
 }

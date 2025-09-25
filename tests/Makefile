@@ -24,7 +24,7 @@ $(DEBUG_DIR):
 	mkdir -p $(DEBUG_DIR)
 
 val:
-	make all "CFLAGS = $(filter-out -fsanitize=address,$(CFLAGS))"
+	make all -s "CFLAGS = $(filter-out -fsanitize=address,$(CFLAGS))"
 
 clean:
 	make clean -C $(BIN_DIR)
