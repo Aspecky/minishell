@@ -6,12 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/23 22:03:37 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/25 18:24:49 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SinglyLinkedList.h"
-#include "_debug.h"
 #include "defs.h"
 #include "environ.h"
 #include "execution.h"
@@ -20,6 +19,7 @@
 #include "signal_hooks.h"
 #include "utils.h"
 #include <errno.h>
+#include <readline/readline.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,6 +55,8 @@ int main(void)
 
 	t_main main;
 
+	rl_outstream = stderr;
+
 	if (!init_main(&main))
 		return (perror("main"), EXIT_FAILURE);
 	while (true)
@@ -72,10 +74,9 @@ int main(void)
 
 		// print_pipeline(main.commands);
 
-		execute(main.commands, main.env->arr);
-		printf("last exit: %i\n", g_last_exit_status);
+		execute(main.commands, main.env);
+		// printf("last exit: %i\n", g_last_exit_status);
 		sllist_clear(main.commands, cmd_free);
 	}
-	clean_main(&main);
-	printf("exit\n");
+	terminate(&main);
 }

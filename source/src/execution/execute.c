@@ -6,12 +6,14 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/22 21:31:24 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/25 22:18:45 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
+#include "environ.h"
 #include "execution.h"
+#include "ft_stdio.h"
 #include "minishell.h"
 #include "signal_hooks.h"
 #include <fcntl.h>
@@ -19,9 +21,8 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <errno.h>
 
-bool setup_cmd_io(t_cmd *cmd)
+bool open_cmd_redirs(t_cmd *cmd)
 {
 	t_redir *redir;
 	t_slnode *node;
@@ -59,20 +60,59 @@ bool setup_cmd_io(t_cmd *cmd)
 	return (true);
 }
 
-typedef struct s_execute {
+bool setup_cmd_io(t_cmd *cmd, int fds[2], bool close_pipe)
+{
+	if (cmd->stdin_fd != STDIN)
+	{
+		dup2(cmd->stdin_fd, STDIN);
+		close(cmd->stdin_fd);
+	}
+	if (cmd->stdout_fd != STDOUT)
+	{
+		dup2(cmd->stdout_fd, STDOUT);
+		close(cmd->stdout_fd);
+	}
+	if (close_pipe)
+	{
+		close(fds[STDIN]);
+		close(fds[STDOUT]);
+	}
+	return (true);
+}
 
-} t_execute;
+bool wait_on_children(size_t children_count, pid_t last_pid)
+{
+	int wstatus;
+	size_t i;
 
-bool execute(t_sllist *commands, char *const envp[])
+	if (waitpid(last_pid, &wstatus, 0) != -1)
+	{
+		if (WIFEXITED(wstatus))
+			g_last_exit_status = WEXITSTATUS(wstatus);
+		else if (WIFSIGNALED(wstatus))
+			g_last_exit_status = 128 + WTERMSIG(wstatus);
+	} else
+		perror("waitpid");
+	i = 0;
+	while (i < children_count - 1)
+	{
+		if (wait(0) == -1)
+			perror("wait");
+		i++;
+	}
+	return (true);
+}
+
+bool execute(t_sllist *commands, t_environ *env)
 {
 	t_slnode *current;
 	t_slnode *next;
 	t_cmd *cmd;
 	int fds[2];
-	int pid;
+	pid_t pid;
 	int prev_stdin;
 
-	// is_executing = true;
+	pid = -1;
 	prev_stdin = STDIN;
 	current = commands->head;
 	while (current)
@@ -87,30 +127,47 @@ bool execute(t_sllist *commands, char *const envp[])
 			pipe(fds);
 			cmd->stdout_fd = dup(fds[STDOUT]);
 		}
-		pid = fork();
-		if (pid == 0)
+		if (commands->size == 1 && is_builtin(cmd->argv[0]))
 		{
-			if (!setup_cmd_io(cmd))
-				exit(EXIT_FAILURE);
-			if (cmd->stdin_fd != STDIN)
+			if (!open_cmd_redirs(cmd))
+				return (false);
+
+			// Save original file descriptors
+			int saved_stdin = dup(STDIN_FILENO);
+			int saved_stdout = dup(STDOUT_FILENO);
+
+			// Setup redirection for the builtin
+			setup_cmd_io(cmd, fds, false);
+			g_last_exit_status = run_builtin(cmd, env);
+
+			// Restore original file descriptors
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
+		} else
+		{
+			pid = fork();
+			if (pid == -1)
+				perror("fork");
+			if (pid == 0)
 			{
-				dup2(cmd->stdin_fd, STDIN);
-				close(cmd->stdin_fd);
+				if (!open_cmd_redirs(cmd))
+					exit(EXIT_FAILURE);
+				if (!setup_cmd_io(cmd, fds, next))
+					exit(EXIT_FAILURE);
+				hook_child_signals();
+
+				if (is_builtin(cmd->argv[0]))
+					exit(run_builtin(cmd, env));
+				else
+				{
+					ft_execvpe(cmd->argv[0], cmd->argv, env->arr);
+					return (perror("execute"), exit(EXIT_FAILURE), false);
+				}
 			}
-			if (cmd->stdout_fd != STDOUT)
-			{
-				dup2(cmd->stdout_fd, STDOUT);
-				close(cmd->stdout_fd);
-			}
-			if (next)
-			{
-				close(fds[STDIN]);
-				close(fds[STDOUT]);
-			}
-			hook_child_signals();
-			if (ft_execvpe(cmd->argv[0], cmd->argv, envp) == -1)
-				return (perror("execute"), exit(EXIT_FAILURE), false);
 		}
+
 		if (prev_stdin != STDIN)
 			close(prev_stdin);
 		if (next)
@@ -122,30 +179,7 @@ bool execute(t_sllist *commands, char *const envp[])
 		current = next;
 	}
 
-	size_t i;
-	int wstatus;
-
-	i = 0;
-	while (i++ < commands->size)
-	{
-		if (wait(&wstatus) == -1)
-		{
-			printf("%i\n", errno);
-			perror("wait");
-			continue;
-		}
-		printf("'%s' wstatus: %i\n", cmd->argv[0], wstatus);
-		if (WIFEXITED(wstatus))
-		{
-			// printf("\tWEXITSTATUS: %i\n", WEXITSTATUS(wstatus));
-			g_last_exit_status = WEXITSTATUS(wstatus);
-		} else if (WIFSIGNALED(wstatus))
-		{
-			// printf("\tWTERMSIG: %i\n", WTERMSIG(wstatus));
-			g_last_exit_status = 128 + WTERMSIG(wstatus);
-		}
-	}
-	// is_executing = false;
-	// printf("last_exit_status: %i\n", g_last_exit_status);
+	if (pid != -1)
+		wait_on_children(commands->size, pid);
 	return (true);
 }

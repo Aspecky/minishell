@@ -1,20 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   pwd_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 16:06:53 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/16 16:07:18 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/24 17:49:57 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/25 22:19:46 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTINS_H
-#define BUILTINS_H
+#include "execution.h"
+#include "ft_stdio.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-#include <stdbool.h>
+int pwd_builtin(void)
+{
+	char *pwd;
 
-bool is_builtin(const char *str);
-
-#endif
+	pwd = getcwd(0, 0);
+	if (!pwd)
+		return (EXIT_FAILURE); // TODO: print error
+	putstr(pwd);
+	putstr("\n");
+	free(pwd);
+	return (EXIT_SUCCESS);
+}
