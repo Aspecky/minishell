@@ -6,15 +6,24 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:14:12 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 22:18:32 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 19:04:56 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "ft_stdio.h"
 #include "ft_string.h"
+#include "utils.h"
+#include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+
+static int on_write_error(void)
+{
+	print_error("echo", "write error: %s", strerror(errno));
+	return (EXIT_FAILURE);
+}
 
 int echo_builtin(int ac, char *av[])
 {
@@ -30,12 +39,15 @@ int echo_builtin(int ac, char *av[])
 	}
 	while (i < ac)
 	{
-		putstr(av[i]);
+		if (putstr(av[i]) == -1)
+			return (on_write_error());
 		if (i + 1 < ac)
-			putstr(" ");
+			if (putstr(" ") == -1)
+				return (on_write_error());
 		i++;
 	}
 	if (print_nl)
-		putstr("\n");
+		if (putstr("\n") == -1)
+			return (on_write_error());
 	return (EXIT_SUCCESS);
 }
