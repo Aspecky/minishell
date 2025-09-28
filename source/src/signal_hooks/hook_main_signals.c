@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 15:46:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/27 16:41:35 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 15:54:17 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 void sigint_handler(int sig)
 {
-	printf("hello\n");
 	(void)sig;
 	printf("\n");
 	if (!is_executing)
