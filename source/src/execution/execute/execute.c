@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 10:09:22 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 15:24:46 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool wait_on_children(pid_t last_pid)
 			if (WTERMSIG(wstatus) == SIGTERM)
 				exit(g_last_exit_status);
 		}
-	} 
+	}
 	while (true)
 		if (wait(0) == -1)
 			break;
@@ -151,18 +151,20 @@ bool execute(t_sllist *commands, t_environ *env)
 						exit(run_builtin(cmd, env));
 					else
 					{
+						int status;
+						char *errmsg;
+
 						ft_execvpe(cmd->argv[0], cmd->argv, env->arr);
+						status = EXIT_FAILURE;
+						errmsg = strerror(errno);
 						if (errno == ENOENT)
 						{
-							print_error(cmd->argv[0], "command not found");
-							exit(127);
-						}
-						else if (errno == EACCES)
-						{
-							print_error(cmd->argv[0], strerror(errno));
-							exit(126);
-						}
-						exit(EXIT_FAILURE);
+							errmsg = "command not found";
+							status = 127;
+						} else if (errno == EACCES)
+							status = 126;
+						print_error(cmd->argv[0], errmsg);
+						exit(status);
 					}
 				}
 			}

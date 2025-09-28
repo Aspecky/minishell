@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 17:48:53 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/17 01:50:55 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 15:38:41 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 int ft_execvpe(const char *file, char *const argv[], char *const envp[])
 {
 	char *path;
+	char *allocated_path;
 	char *p;
 	char *subp;
 	char *pend;
@@ -31,10 +32,15 @@ int ft_execvpe(const char *file, char *const argv[], char *const envp[])
 
 	if (ft_strchr(file, '/'))
 		return (execve(file, argv, envp), -1);
+	allocated_path = 0;
 	path = getenv_r("PATH", envp);
-	// TODO: if path is not found, return confstr(_CS_PATH)
-	if (!path)
-		return (-1);
+	if (!path || !*path)
+	{
+		path = getcwd(0, 0);
+		if (!path)
+			return (-1);
+		allocated_path = path;
+	}
 	file_len = ft_strlen(file);
 	p = path;
 	pend = 0;
@@ -57,12 +63,12 @@ int ft_execvpe(const char *file, char *const argv[], char *const envp[])
 			got_eaccess = true;
 		else if (errno != ENOENT && errno != ESTALE && errno != ENOTDIR &&
 				 errno != ENODEV && errno != ETIMEDOUT)
-			return (free(pend), -1);
+			return (free(allocated_path), free(pend), -1);
 		if (!*subp++)
 			break;
 		p = subp;
 	}
-	free(pend);
+	(free(allocated_path), free(pend));
 	if (got_eaccess)
 		errno = EACCES;
 	return (-1);
