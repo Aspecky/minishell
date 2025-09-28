@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/27 21:48:12 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 16:12:23 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool is_executing = false;
 int g_last_exit_status = 0;
 
 bool init_main(t_main *main)

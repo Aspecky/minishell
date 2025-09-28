@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 15:24:46 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 16:12:14 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ bool execute(t_sllist *commands, t_environ *env)
 	pid_t last_pid;
 	int prev_stdin;
 
-	is_executing = true;
+	is_executing(&(bool){true});
 	pid = -1;
 	last_pid = -1;
 	prev_stdin = STDIN;
@@ -182,6 +182,6 @@ bool execute(t_sllist *commands, t_environ *env)
 	}
 
 	wait_on_children(last_pid);
-	is_executing = false;
+	is_executing(&(bool){false});
 	return (true);
 }

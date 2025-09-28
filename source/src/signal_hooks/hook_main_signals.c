@@ -6,23 +6,22 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 15:46:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 15:54:17 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 16:12:50 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "signal_hooks.h"
+#include "utils.h"
 #include <readline/readline.h>
 #include <signal.h>
 #include <stdio.h>
-
-#include <unistd.h>
 
 void sigint_handler(int sig)
 {
 	(void)sig;
 	printf("\n");
-	if (!is_executing)
+	if (!is_executing(0))
 	{
 		g_last_exit_status = 1;
 		rl_on_new_line();
