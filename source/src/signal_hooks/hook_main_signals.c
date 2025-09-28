@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 15:46:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/22 21:26:47 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/27 16:41:35 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@
 #include <signal.h>
 #include <stdio.h>
 
+#include <unistd.h>
+
 void sigint_handler(int sig)
 {
+	printf("hello\n");
 	(void)sig;
 	printf("\n");
-	rl_on_new_line();
+	if (!is_executing)
+	{
+		g_last_exit_status = 1;
+		rl_on_new_line();
+	}
 	rl_replace_line("", false);
 	rl_redisplay();
 }

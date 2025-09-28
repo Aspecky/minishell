@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/23 22:01:55 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/27 18:21:46 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,8 @@ bool process_heredocs(t_sllist *commands, char *const envp[])
 		{
 			redir = redir_node->data;
 			if (redir->type == REDIR_HEREDOC)
-			{
-				process_cmd_heredoc(cmd, redir, envp);
-			}
+				if (!process_cmd_heredoc(cmd, redir, envp))
+					return (false);
 			redir_node = redir_node->next;
 		}
 		cmd_node = cmd_node->next;

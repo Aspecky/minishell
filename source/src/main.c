@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 18:24:49 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/27 21:48:12 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "parsing.h"
 #include "signal_hooks.h"
 #include "utils.h"
-#include <errno.h>
 #include <readline/readline.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -43,7 +42,6 @@ void clean_main(t_main *main)
 	free(main->commands);
 }
 
-// TODO: bash prompts in stderr not stdout
 int main(void)
 {
 
@@ -66,16 +64,8 @@ int main(void)
 			break;
 		parse(main.input, main.env->arr, main.commands);
 		if (main.commands->size == 0)
-		{
-			if (errno)
-				perror("parser");
 			continue;
-		}
-
-		// print_pipeline(main.commands);
-
 		execute(main.commands, main.env);
-		// printf("last exit: %i\n", g_last_exit_status);
 		sllist_clear(main.commands, cmd_free);
 	}
 	terminate(&main);

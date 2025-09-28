@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:47 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 22:20:04 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/26 20:25:41 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <ft_stdlib.h>
 #include <stdlib.h>
 
-t_cmd *cmd_new(char **argv, size_t argc, t_sllist *redirs)
+t_cmd *cmd_new(char **argv, int argc, t_sllist *redirs)
 {
 	t_cmd *cmd;
 
@@ -33,7 +33,7 @@ t_cmd *cmd_new(char **argv, size_t argc, t_sllist *redirs)
 void cmd_free(void *ptr)
 {
 	t_cmd *cmd;
-	size_t i;
+	int i;
 
 	cmd = ptr;
 	if (!cmd)

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:05:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/25 17:19:38 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/26 02:51:24 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,6 @@ static char *create_env_entry(const char *name, const char *value)
 	return (entry);
 }
 
-static t_slnode *find_env_node(t_sllist *list, const char *name)
-{
-	t_slnode *current;
-	size_t name_len;
-	char *env_str;
-
-	name_len = ft_strlen(name);
-	current = list->head;
-	while (current)
-	{
-		env_str = (char *)current->data;
-		if (ft_strncmp(env_str, name, name_len) == 0 && env_str[name_len] == '=')
-			return (current);
-		current = current->next;
-	}
-	return (NULL);
-}
-
 bool environ_set(t_environ *env, const char *name, const char *value)
 {
 	t_slnode *existing_node;
@@ -59,7 +41,7 @@ bool environ_set(t_environ *env, const char *name, const char *value)
 	new_entry = create_env_entry(name, value);
 	if (!new_entry)
 		return (false);
-	existing_node = find_env_node(env->list, name);
+	existing_node = environ_get_node(env->list, name);
 	if (existing_node)
 	{
 		free(existing_node->data);

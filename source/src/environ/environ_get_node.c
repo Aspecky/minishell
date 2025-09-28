@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environ.h                                          :+:      :+:    :+:   */
+/*   environ_get_node.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 01:53:42 by mtarrih           #+#    #+#             */
+/*   Created: 2025/09/26 02:45:29 by mtarrih           #+#    #+#             */
 /*   Updated: 2025/09/26 02:51:24 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENVIRON_H
-#define ENVIRON_H
+#include "environ.h"
+#include "ft_string.h"
 
-#include "SinglyLinkedList.h"
-#include <stdbool.h>
+t_slnode *environ_get_node(t_sllist *list, const char *name)
+{
+	t_slnode *current;
+	size_t name_len;
+	char *env_str;
 
-typedef struct s_environ {
-	t_sllist *list;
-	char **arr;
-} t_environ;
-
-t_environ *environ_new(void);
-void environ_free(t_environ *env);
-bool environ_set(t_environ *env, const char *name, const char *value);
-bool environ_unset(t_environ *env, const char *name);
-
-t_slnode *environ_get_node(t_sllist *list, const char *name);
-char **environ_list_to_envp(t_sllist *list);
-
-#endif
+	name_len = ft_strlen(name);
+	current = list->head;
+	while (current)
+	{
+		env_str = (char *)current->data;
+		if (ft_strncmp(env_str, name, name_len) == 0 && env_str[name_len] == '=')
+			return (current);
+		current = current->next;
+	}
+	return (NULL);
+}

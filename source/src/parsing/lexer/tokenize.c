@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 00:00:00 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 23:13:34 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/27 17:14:09 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,12 @@ char *extract_word(char **stream)
 	return (word);
 }
 
-t_sllist *tokenize(char *stream)
+bool tokenize(char *stream, t_sllist *tokens)
 {
-	t_sllist *tokens;
 	t_token *token;
 	char *value;
 	t_token_type type;
 
-	tokens = sllist_new();
-	if (!tokens)
-		return (NULL);
 	while (*stream)
 	{
 		type = TOKEN_EOF;
@@ -110,23 +106,20 @@ t_sllist *tokenize(char *stream)
 		if (type != TOKEN_EOF)
 		{
 			if (!value)
-			{
-				sllist_free(tokens, token_free);
-				return (NULL);
-			}
+				return (false);
 			token = token_new(type, value);
 			if (!token || !sllist_append(tokens, token))
 			{
 				if (token)
 					token_free(token);
-				return (sllist_free(tokens, token_free), NULL);
+				return (false);
 			}
 		}
 	}
 	token = token_new(TOKEN_EOF, 0);
 	if (!token)
-		return (sllist_free(tokens, token_free), NULL);
+		return (false);
 	if (!sllist_append(tokens, token))
-		return (token_free(token), sllist_free(tokens, token_free), NULL);
-	return (tokens);
+		return (token_free(token), false);
+	return (true);
 }

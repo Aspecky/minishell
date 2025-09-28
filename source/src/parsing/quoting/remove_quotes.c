@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:07:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/21 21:39:34 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/27 18:50:40 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,29 @@ bool remove_str_quotes(char *str)
 
 void remove_quotes(t_sllist *tokens)
 {
-	t_slnode *node;
+	t_slnode *prev;
+	t_slnode *curr;
+	t_slnode *next;
 	t_token *token;
 
-	node = tokens->head;
-	while (node)
+	prev = 0;
+	curr = tokens->head;
+	while (curr)
 	{
-		token = node->data;
+		next = curr->next;
+		token = curr->data;
 		if (token->type == TOKEN_WORD)
-			token->was_quoted = remove_str_quotes(token->value);
-		node = node->next;
+		{
+			if (token->value[0] == '\0')
+			{
+				sllist_pop(tokens, curr, prev);
+				slnode_free(curr, token_free);
+				curr = prev;
+			}
+			else
+				token->was_quoted = remove_str_quotes(token->value);
+		}
+		prev = curr;
+		curr = next;
 	}
 }

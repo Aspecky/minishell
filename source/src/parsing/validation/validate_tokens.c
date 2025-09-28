@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection.c                                      :+:      :+:    :+:   */
+/*   validate_tokens.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 00:37:36 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/27 17:33:42 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/28 09:56:12 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-#include <stdio.h>
+#include "utils.h"
 
-bool check_redirections(t_sllist *tokens)
+bool validate_tokens(t_sllist *tokens)
 {
 	t_slnode *current;
 	t_token *token;
@@ -30,10 +30,20 @@ bool check_redirections(t_sllist *tokens)
 			current = current->next;
 			token = current->data;
 			if (token->type != TOKEN_WORD)
-			{
-				printf("syntax error: unexpected token near redirection\n");
-				return (false);
-			}
+				return (print_error("syntax error",
+									"unexpected token near redirection"),
+						false);
+			if (token->type != TOKEN_HEREDOC && *(token->value) == '\0')
+				return (print_error("syntax error", "ambiguous redirect"),
+						false);
+		} else if (token->type == TOKEN_PIPE)
+		{
+			current = current->next;
+			token = current->data;
+			if (token->type != TOKEN_WORD && token->type != TOKEN_HEREDOC)
+				return (
+					print_error("syntax error", "unexpected token near pipe"),
+					false);
 		}
 		current = current->next;
 	}

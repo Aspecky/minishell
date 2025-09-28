@@ -43,5 +43,7 @@ fclean: clean
 	rm -f $(NAME)
 	make -C $(FTLIBC_DIR) fclean
 
+re: fclean all
+
 print-%:
 	@echo $($*)
