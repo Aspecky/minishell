@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:56:33 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/23 22:18:39 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 16:04:02 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool expand_words(t_sllist *tokens, char *const envp[])
 	{
 		token = node->data;
 		if (token->type == TOKEN_WORD &&
-			(prev && ((t_token *)(prev->data))->type != TOKEN_HEREDOC))
+			!(prev && ((t_token *)(prev->data))->type == TOKEN_HEREDOC))
 		{
 			if (!do_expantion(token, envp, tilde_expantion) ||
 				!do_expantion(token, envp, param_expantion))
