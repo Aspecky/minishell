@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 18:13:35 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 16:10:18 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 19:51:45 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,5 @@
 #include <stdbool.h>
 
 extern int g_last_exit_status;
-
-void terminate(t_main *main);
 
 #endif
