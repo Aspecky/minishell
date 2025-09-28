@@ -6,59 +6,70 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 18:51:28 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 00:44:14 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
-#include "ft_stdio.h"
 #include "ft_string.h"
 #include "parsing.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-bool	process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
+static bool	post_loop(t_lninfo lninfo, ssize_t len, int fds[2], t_cmd *cmd)
 {
-	int			fd[2];
-	t_lninfo	lninfo;
-	ssize_t		len;
-	size_t		delim_len;
-	char		*line;
-
-	if (pipe(fd) == -1)
-		return (false);
-	lninfo = (t_lninfo){0, 0, 0, 0};
-	delim_len = ft_strlen(redir->file_or_delim);
-	while (true)
-	{
-		dputstr("> ", STDOUT);
-		len = dgetline(STDIN, &lninfo);
-		if (len <= 0 || ((size_t)len - 1 == delim_len && ft_strncmp(lninfo.line,
-					redir->file_or_delim, delim_len) == 0))
-			break ;
-		line = lninfo.line;
-		if (!redir->was_quoted)
-		{
-			line = heredoc_expantion(lninfo.line, envp, &len);
-			if (!line)
-				return (close(fd[0]), close(fd[1]), free(lninfo.line),
-					free(lninfo.store), false);
-		}
-		if (write(fd[STDOUT], line, (size_t)len) == -1)
-			return (close(fd[0]), close(fd[1]), free(line), free(lninfo.store),
-				false);
-		if (!redir->was_quoted)
-			free(line);
-	}
 	(free(lninfo.line), free(lninfo.store));
 	if (len == -1)
-		return (close(fd[0]), close(fd[1]), false);
-	close(fd[STDOUT]);
+		return (close(fds[0]), close(fds[1]), false);
+	close(fds[STDOUT]);
 	if (cmd->stdin_fd != STDIN)
 		close(cmd->stdin_fd);
-	cmd->stdin_fd = fd[STDIN];
+	cmd->stdin_fd = fds[STDIN];
 	return (true);
+}
+
+static bool	on_error(int fds[2], void *p1, void *p2)
+{
+	close(fds[0]);
+	close(fds[1]);
+	free(p1);
+	free(p2);
+	return (false);
+}
+
+static bool	is_delimiter_reached(t_pch_vars *v, t_redir *redir)
+{
+	return ((size_t)v->len - 1 == v->delim_len && ft_strncmp(v->lninfo.line,
+			redir->file_or_delim, v->delim_len) == 0);
+}
+
+static bool	process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
+{
+	t_pch_vars	v;
+
+	if (pipe(v.fds) == -1)
+		return (false);
+	v.lninfo = (t_lninfo){0, 0, 0, 0};
+	v.delim_len = ft_strlen(redir->file_or_delim);
+	while (true)
+	{
+		(dputstr("> ", STDOUT), v.len = dgetline(STDIN, &v.lninfo));
+		if (v.len <= 0 || is_delimiter_reached(&v, redir))
+			break ;
+		v.line = v.lninfo.line;
+		if (!redir->was_quoted)
+		{
+			v.line = heredoc_expantion(v.lninfo.line, envp, &v.len);
+			if (!v.line)
+				return (on_error(v.fds, v.lninfo.line, v.lninfo.store));
+		}
+		if (write(v.fds[STDOUT], v.line, (size_t)v.len) == -1)
+			return (on_error(v.fds, v.line, v.lninfo.store));
+		if (!redir->was_quoted)
+			free(v.line);
+	}
+	return (post_loop(v.lninfo, v.len, v.fds, cmd));
 }
 
 bool	process_heredocs(t_sllist *commands, char *const envp[])

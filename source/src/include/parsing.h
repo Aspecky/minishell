@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 20:36:24 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 20:36:27 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 00:44:08 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <sys/types.h>
+# include "ft_stdio.h"
 
 /* External Definitions */
 bool				parse(char *stream, char *const envp[], t_sllist *commands);
@@ -45,6 +46,15 @@ typedef struct s_token
 	bool			was_quoted;
 }					t_token;
 
+typedef struct s_pch_vars
+{
+	int			fds[2];
+	t_lninfo	lninfo;
+	ssize_t		len;
+	size_t		delim_len;
+	char		*line;
+}				t_pch_vars;
+
 bool				validate_quotes_balance(const char *str);
 bool				tokenize(char *stream, t_sllist *tokens);
 bool				check_redirections(t_sllist *tokens);
@@ -57,6 +67,8 @@ char				*tilde_expantion(char *str, char *const envp[]);
 char				*heredoc_expantion(char *str, char *const envp[],
 						ssize_t *len);
 bool				validate_tokens(t_sllist *tokens);
+bool				is_redir_token(t_token *token);
+t_redir_type		token_to_redir_type(t_token_type token_type);
 
 int					is_word_separator(int c);
 int					is_metacharacter(int c);
@@ -65,7 +77,7 @@ int					is_quote(int c);
 // Objects
 t_token				*token_new(t_token_type type, char *value);
 t_redir				*redir_new(t_redir_type type, char *file_or_delim);
-t_cmd				*cmd_new(char **argv, int argc, t_sllist *redirs);
+t_cmd				*cmd_new(int argc);
 
 void				token_free(void *data);
 void				redir_free(void *ptr);

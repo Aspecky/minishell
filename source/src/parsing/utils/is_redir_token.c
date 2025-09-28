@@ -1,37 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_redir.c                                          :+:      :+:    :+:   */
+/*   is_redir_token.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 16:12:17 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/20 18:00:13 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/28 22:17:08 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/28 22:17:16 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-#include <stdlib.h>
 
-t_redir	*redir_new(t_redir_type type, char *file_or_delim)
+bool	is_redir_token(t_token *token)
 {
-	t_redir	*redir;
+	t_token_type	type;
 
-	redir = malloc(sizeof(t_redir));
-	if (!redir)
-		return (0);
-	redir->type = type;
-	redir->file_or_delim = file_or_delim;
-	return (redir);
-}
-
-void	redir_free(void *ptr)
-{
-	t_redir	*redir;
-
-	redir = ptr;
-	if (!redir)
-		return ;
-	free(redir->file_or_delim);
-	free(redir);
+	type = token->type;
+	return (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT
+		|| type == TOKEN_REDIRECT_APPEND || type == TOKEN_HEREDOC);
 }

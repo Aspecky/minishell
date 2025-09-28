@@ -14,10 +14,10 @@
 #include "ft_string.h"
 #include "parsing.h"
 
-char *tilde_expantion(char *str, char *const envp[])
+char	*tilde_expantion(char *str, char *const envp[])
 {
-	char *value;
-	char *ret;
+	char	*value;
+	char	*ret;
 
 	if (!(str[0] == '~' && (str[1] == '/' || !str[1])))
 		return (ft_strdup(str));
