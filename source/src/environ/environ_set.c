@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:05:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/26 02:51:24 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 20:38:17 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #include "ft_string.h"
 #include <stdlib.h>
 
-static char *create_env_entry(const char *name, const char *value)
+static char	*create_env_entry(const char *name, const char *value)
 {
-	size_t name_len;
-	size_t value_len;
-	char *entry;
+	size_t	name_len;
+	size_t	value_len;
+	char	*entry;
 
 	name_len = ft_strlen(name);
 	value_len = ft_strlen(value);
@@ -32,11 +32,11 @@ static char *create_env_entry(const char *name, const char *value)
 	return (entry);
 }
 
-bool environ_set(t_environ *env, const char *name, const char *value)
+bool	environ_set(t_environ *env, const char *name, const char *value)
 {
-	t_slnode *existing_node;
-	char *new_entry;
-	char **new_arr;
+	t_slnode	*existing_node;
+	char		*new_entry;
+	char		**new_arr;
 
 	new_entry = create_env_entry(name, value);
 	if (!new_entry)
@@ -50,10 +50,7 @@ bool environ_set(t_environ *env, const char *name, const char *value)
 	else
 	{
 		if (!sllist_append(env->list, new_entry))
-		{
-			free(new_entry);
-			return (false);
-		}
+			return (free(new_entry), false);
 	}
 	new_arr = environ_list_to_envp(env->list);
 	if (!new_arr)

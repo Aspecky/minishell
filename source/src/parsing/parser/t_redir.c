@@ -13,9 +13,9 @@
 #include "parsing.h"
 #include <stdlib.h>
 
-t_redir *redir_new(t_redir_type type, char *file_or_delim)
+t_redir	*redir_new(t_redir_type type, char *file_or_delim)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
@@ -25,10 +25,10 @@ t_redir *redir_new(t_redir_type type, char *file_or_delim)
 	return (redir);
 }
 
-void redir_free(void *ptr)
+void	redir_free(void *ptr)
 {
-	t_redir *redir;
-	
+	t_redir	*redir;
+
 	redir = ptr;
 	if (!redir)
 		return ;

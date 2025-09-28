@@ -13,9 +13,9 @@
 #include "parsing.h"
 #include <stdlib.h>
 
-t_token *token_new(t_token_type type, char *value)
+t_token	*token_new(t_token_type type, char *value)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = malloc(sizeof(t_token));
 	if (!token)
@@ -26,9 +26,9 @@ t_token *token_new(t_token_type type, char *value)
 	return (token);
 }
 
-void token_free(void *data)
+void	token_free(void *data)
 {
-	t_token *token;
+	t_token	*token;
 
 	if (!data)
 		return ;

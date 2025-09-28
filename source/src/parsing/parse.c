@@ -17,16 +17,16 @@
 #include <stdbool.h>
 #include <string.h>
 
-static bool on_error(t_sllist *tokens, const char *s1, const char *s2)
+static bool	on_error(t_sllist *tokens, const char *s1, const char *s2)
 {
 	sllist_clear(tokens, token_free);
 	print_error(s1, s2);
 	return (false);
 }
 
-bool parse(char *stream, char *const envp[], t_sllist *commands)
+bool	parse(char *stream, char *const envp[], t_sllist *commands)
 {
-	t_sllist tokens;
+	t_sllist	tokens;
 
 	tokens = (t_sllist){0, 0, 0};
 	if (!validate_quotes_balance(stream))

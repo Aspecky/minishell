@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   state_is_executing.c                               :+:      :+:    :+:   */
+/*   is_executing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 16:09:44 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 16:11:47 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 21:50:25 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-bool is_executing(bool *new_value)
+bool	is_executing(bool *new_value)
 {
-	static bool value = 0;
+	static bool	value = 0;
 
 	if (new_value)
 		value = *new_value;

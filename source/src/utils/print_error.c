@@ -15,9 +15,9 @@
 #include "utils.h"
 #include <stdarg.h>
 
-void print_error(const char *cmd, const char *format, ...)
+void	print_error(const char *cmd, const char *format, ...)
 {
-	va_list args;
+	va_list	args;
 
 	dputstr(RL_PROMPT, STDERR);
 	dputstr(": ", STDERR);
@@ -33,7 +33,8 @@ void print_error(const char *cmd, const char *format, ...)
 				dputstr(va_arg(args, char *), STDERR);
 			else if (*format == 'i')
 				dputlli(va_arg(args, int), STDERR);
-		} else
+		}
+		else
 			dputchar(*format, STDERR);
 		format++;
 	}

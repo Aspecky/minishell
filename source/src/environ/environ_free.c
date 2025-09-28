@@ -13,7 +13,7 @@
 #include "environ.h"
 #include <stdlib.h>
 
-void environ_free(t_environ *env)
+void	environ_free(t_environ *env)
 {
 	if (!env)
 		return ;

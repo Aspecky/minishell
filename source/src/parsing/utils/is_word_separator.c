@@ -13,7 +13,7 @@
 #include "ft_ctype.h"
 #include "parsing.h"
 
-int is_word_separator(int c)
+int	is_word_separator(int c)
 {
 	return (c == '|' || c == '<' || c == '>' || ft_isspace(c));
 }

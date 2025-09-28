@@ -17,7 +17,7 @@
 #include <signal.h>
 #include <stdio.h>
 
-void sigint_handler(int sig)
+void	sigint_handler(int sig)
 {
 	(void)sig;
 	printf("\n");
@@ -30,14 +30,14 @@ void sigint_handler(int sig)
 	rl_redisplay();
 }
 
-bool hook_main_signals(void)
+bool	hook_main_signals(void)
 {
-	struct sigaction sigint_act;
+	struct sigaction	sigint_act;
 
 	init_sigaction(&sigint_act, sigint_handler);
 	sigint_act.sa_flags = SA_RESTART;
-	if (sigaction(SIGINT, &sigint_act, 0) == -1 ||
-		signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+	if (sigaction(SIGINT, &sigint_act, 0) == -1 || signal(SIGQUIT,
+			SIG_IGN) == SIG_ERR)
 		return (false);
 	rl_catch_signals = false;
 	return (true);

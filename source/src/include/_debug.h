@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #ifndef _DEBUG_H
-#define _DEBUG_H
+# define _DEBUG_H
 
-#include "SinglyLinkedList.h"
+# include "SinglyLinkedList.h"
 
-void print_pipeline(const t_sllist *commands);
-void print_tokens(const t_sllist *tokens);
+void	print_pipeline(const t_sllist *commands);
+void	print_tokens(const t_sllist *tokens);
 
 #endif

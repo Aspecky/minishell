@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 
 #ifndef SIGNAL_HOOKS_H
-#define SIGNAL_HOOKS_H
+# define SIGNAL_HOOKS_H
 
-#include <signal.h>
-#include <stdbool.h>
+# include <signal.h>
+# include <stdbool.h>
 
-void init_sigaction(struct sigaction *act, void (*handler)(int));
-bool hook_main_signals(void);
-bool hook_child_signals(void);
+void	init_sigaction(struct sigaction *act, void (*handler)(int));
+bool	hook_main_signals(void);
+bool	hook_child_signals(void);
 
 #endif

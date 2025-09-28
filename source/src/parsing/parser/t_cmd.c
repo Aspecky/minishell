@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:47 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/26 20:25:41 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 22:32:06 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,33 @@
 #include <ft_stdlib.h>
 #include <stdlib.h>
 
-t_cmd *cmd_new(char **argv, int argc, t_sllist *redirs)
+t_cmd	*cmd_new(int argc)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (0);
-	cmd->redirs = redirs;
-	cmd->argv = argv;
-	cmd->argc = argc;
+	cmd->redirs = sllist_new();
+	if (!cmd->redirs)
+		return (free(cmd), NULL);
+	cmd->argv = malloc(sizeof(char *) * (argc + 1));
+	if (!cmd->argv)
+		return (free(cmd->redirs), free(cmd), NULL);
+	cmd->argc = 0;
 	cmd->stdin_fd = STDIN;
 	cmd->stdout_fd = STDOUT;
 	return (cmd);
 }
 
-void cmd_free(void *ptr)
+void	cmd_free(void *ptr)
 {
-	t_cmd *cmd;
-	int i;
+	t_cmd	*cmd;
+	int		i;
 
 	cmd = ptr;
 	if (!cmd)
-		return;
+		return ;
 	i = 0;
 	while (i < cmd->argc)
 		free(cmd->argv[i++]);

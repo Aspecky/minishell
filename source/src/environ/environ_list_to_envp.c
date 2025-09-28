@@ -13,11 +13,11 @@
 #include "environ.h"
 #include <stdlib.h>
 
-char **environ_list_to_envp(t_sllist *list)
+char	**environ_list_to_envp(t_sllist *list)
 {
-	char **envp;
-	t_slnode *node;
-	size_t i;
+	char		**envp;
+	t_slnode	*node;
+	size_t		i;
 
 	envp = malloc(sizeof(char *) * (list->size + 1));
 	if (!envp)

@@ -13,10 +13,10 @@
 #include "environ.h"
 #include <stdlib.h>
 
-bool environ_unset(t_environ *env, const char *name)
+bool	environ_unset(t_environ *env, const char *name)
 {
-	t_slnode *node_to_remove;
-	char **new_arr;
+	t_slnode	*node_to_remove;
+	char		**new_arr;
 
 	node_to_remove = environ_get_node(env->list, name);
 	if (!node_to_remove)
