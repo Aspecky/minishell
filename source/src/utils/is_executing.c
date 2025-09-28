@@ -12,9 +12,9 @@
 
 #include "utils.h"
 
-bool is_executing(bool *new_value)
+bool	is_executing(bool *new_value)
 {
-	static bool value = 0;
+	static bool	value = 0;
 
 	if (new_value)
 		value = *new_value;

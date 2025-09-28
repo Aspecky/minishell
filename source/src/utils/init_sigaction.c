@@ -12,7 +12,7 @@
 
 #include "signal_hooks.h"
 
-void init_sigaction(struct sigaction *act, void (*handler)(int))
+void	init_sigaction(struct sigaction *act, void (*handler)(int))
 {
 	act->sa_handler = handler;
 	sigemptyset(&act->sa_mask);

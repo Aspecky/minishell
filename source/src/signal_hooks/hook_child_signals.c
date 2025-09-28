@@ -13,11 +13,11 @@
 #include "signal_hooks.h"
 #include <readline/readline.h>
 
-bool hook_child_signals(void)
+bool	hook_child_signals(void)
 {
 	rl_catch_signals = true;
-	if (signal(SIGINT, SIG_DFL) == SIG_ERR ||
-		signal(SIGQUIT, SIG_DFL) == SIG_ERR)
+	if (signal(SIGINT, SIG_DFL) == SIG_ERR || signal(SIGQUIT,
+			SIG_DFL) == SIG_ERR)
 		return (false);
 	return (true);
 }

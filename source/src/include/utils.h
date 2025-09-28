@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 
 #ifndef UTILS_H
-#define UTILS_H
+# define UTILS_H
 
-#include <stddef.h>
-#include <stdbool.h>
+# include <stdbool.h>
+# include <stddef.h>
 
-char *rl_gets(const char *prompt);
-void print_error(const char *cmd, const char *format, ...);
-bool is_executing(bool *new_value);
+char	*rl_gets(const char *prompt);
+void	print_error(const char *cmd, const char *format, ...);
+bool	is_executing(bool *new_value);
 
 #endif

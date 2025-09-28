@@ -14,14 +14,14 @@
 #include "ft_string.h"
 #include <stdlib.h>
 
-extern char **environ;
+extern char	**environ;
 
-t_environ *environ_new(void)
+t_environ	*environ_new(void)
 {
-	t_environ *env;
-	size_t len;
-	size_t i;
-	char *dup;
+	t_environ	*env;
+	size_t		len;
+	size_t		i;
+	char		*dup;
 
 	len = 0;
 	while (environ[len])

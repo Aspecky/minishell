@@ -13,8 +13,8 @@
 #include "ft_ctype.h"
 #include "parsing.h"
 
-int is_metacharacter(int c)
+int	is_metacharacter(int c)
 {
-	return (c == '|' || c == '&' || c == '(' || c == ')' || c == '<' ||
-			c == '>' || ft_isspace(c));
+	return (c == '|' || c == '&' || c == '(' || c == ')' || c == '<' || c == '>'
+		|| ft_isspace(c));
 }

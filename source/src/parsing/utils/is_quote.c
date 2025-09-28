@@ -12,7 +12,7 @@
 
 #include "parsing.h"
 
-int is_quote(int c)
+int	is_quote(int c)
 {
 	return (c == '\'' || c == '"');
 }
