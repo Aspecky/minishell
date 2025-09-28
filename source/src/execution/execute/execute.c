@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 16:12:14 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 19:43:24 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <stdio.h>
+
 void redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
 {
+	printf("cmd_in: %i cmd_out: %i\n", cmd->stdin_fd, cmd->stdout_fd);
+
 	if (cmd->stdin_fd != STDIN)
 	{
 		dup2(cmd->stdin_fd, STDIN);
@@ -72,16 +76,16 @@ static void exec_builtin(t_cmd *cmd, int fds[2], t_environ *env)
 	if (!open_cmd_redirs(cmd))
 		return;
 
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
+	saved_stdin = dupminex(STDIN, STDERR);
+	saved_stdout = dupminex(STDOUT, STDERR);
 
 	// Setup redirection for the builtin
 	redirect_io(cmd, fds, false);
 	g_last_exit_status = run_builtin(cmd, env);
 
 	// Restore original file descriptors
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
+	dup2(saved_stdin, STDIN);
+	dup2(saved_stdout, STDOUT);
 	close(saved_stdin);
 	close(saved_stdout);
 }
