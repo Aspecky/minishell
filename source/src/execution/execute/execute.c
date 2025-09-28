@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 19:43:24 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 19:49:22 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include <stdio.h>
-
 void redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
 {
-	printf("cmd_in: %i cmd_out: %i\n", cmd->stdin_fd, cmd->stdout_fd);
-
 	if (cmd->stdin_fd != STDIN)
 	{
 		dup2(cmd->stdin_fd, STDIN);
