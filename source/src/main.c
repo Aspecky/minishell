@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 16:12:23 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 17:47:10 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool init_main(t_main *main)
 void clean_main(t_main *main)
 {
 	environ_free(main->env);
-	free(main->commands);
+	sllist_free(main->commands, cmd_free);
 }
 
 int main(void)
@@ -61,11 +61,12 @@ int main(void)
 		main.input = rl_gets(RL_PROMPT "> ");
 		if (!main.input)
 			break;
-		parse(main.input, main.env->arr, main.commands);
+		sllist_clear(main.commands, cmd_free);
+		if (!parse(main.input, main.env->arr, main.commands))
+			continue;
 		if (main.commands->size == 0)
 			continue;
 		execute(main.commands, main.env);
-		sllist_clear(main.commands, cmd_free);
 	}
-	terminate(&main);
+	clean_main(&main);
 }

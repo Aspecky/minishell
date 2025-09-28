@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:13:46 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 16:02:30 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 16:24:16 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool parse(char *stream, char *const envp[], t_sllist *commands)
 	if (!expand_words(&tokens, envp))
 		return (on_error(&tokens, "expantion", strerror(errno)));
 	if (!validate_tokens(&tokens))
-		return (on_error(&tokens, "syntax error", "invalid token"));
+		return (sllist_clear(&tokens, token_free), false);
 	remove_quotes(&tokens);
 	if (!tokens_to_commands(commands, &tokens))
 		return (on_error(&tokens, "tokens_to_commands", strerror(errno)));

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/26 20:22:25 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 17:20:00 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@
 #include "environ.h"
 #include <stdbool.h>
 #include <stdint.h>
+
+
+typedef enum e_loop_control : uint8_t {
+	LOOP_NORMAL,
+	LOOP_CONTINUE,
+	LOOP_BREAK,
+	LOOP_RETURN,
+
+} t_loop_control;
 
 typedef enum e_redir_type : uint8_t {
 	REDIR_IN,

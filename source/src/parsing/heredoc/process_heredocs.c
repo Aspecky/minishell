@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/27 18:21:46 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/28 17:52:29 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
+bool	process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 {
-	int fd[2];
-	t_lninfo lninfo;
-	ssize_t len;
-	size_t delim_len;
-	char *line;
+	int			fd[2];
+	t_lninfo	lninfo;
+	ssize_t		len;
+	size_t		delim_len;
+	char		*line;
 
 	if (pipe(fd) == -1)
 		return (false);
@@ -34,25 +34,26 @@ bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 	{
 		dputstr("> ", STDOUT);
 		len = dgetline(STDIN, &lninfo);
-		if (len <= 0 ||
-			((size_t)len - 1 == delim_len &&
-			 ft_strncmp(lninfo.line, redir->file_or_delim, delim_len) == 0))
-			break;
+		if (len <= 0 || ((size_t)len - 1 == delim_len && ft_strncmp(lninfo.line,
+					redir->file_or_delim, delim_len) == 0))
+			break ;
 		line = lninfo.line;
 		if (!redir->was_quoted)
 		{
-			// TODO: Cleanup on error
 			line = heredoc_expantion(lninfo.line, envp, &len);
 			if (!line)
-				return (false);
+				return (close(fd[0]), close(fd[1]), free(lninfo.line),
+					free(lninfo.store), false);
 		}
 		if (write(fd[STDOUT], line, (size_t)len) == -1)
-			return (close(fd[0]), close(fd[1]), free(line),
-					free(lninfo.store), false);
+			return (close(fd[0]), close(fd[1]), free(line), free(lninfo.store),
+				false);
 		if (!redir->was_quoted)
 			free(line);
 	}
 	(free(lninfo.line), free(lninfo.store));
+	if (len == -1)
+		return (close(fd[0]), close(fd[1]), false);
 	close(fd[STDOUT]);
 	if (cmd->stdin_fd != STDIN)
 		close(cmd->stdin_fd);
@@ -60,12 +61,12 @@ bool process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 	return (true);
 }
 
-bool process_heredocs(t_sllist *commands, char *const envp[])
+bool	process_heredocs(t_sllist *commands, char *const envp[])
 {
-	t_slnode *cmd_node;
-	t_slnode *redir_node;
-	t_cmd *cmd;
-	t_redir *redir;
+	t_slnode	*cmd_node;
+	t_slnode	*redir_node;
+	t_cmd		*cmd;
+	t_redir		*redir;
 
 	cmd_node = commands->head;
 	while (cmd_node)
