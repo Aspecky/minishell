@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 17:49:13 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 19:44:35 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 02:24:01 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,14 @@ typedef struct s_execute_vars
 	pid_t		pid;
 	int			prev_stdin;
 }				t_execute_vars;
+
+typedef struct s_deip_vars
+{
+	const char	*current_dir;
+	const char	*next_dir;
+	char		*full_path;
+	size_t		dir_len;
+	bool		got_eaccess;
+}				t_deip_vars;
 
 #endif

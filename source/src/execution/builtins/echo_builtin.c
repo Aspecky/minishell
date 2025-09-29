@@ -19,16 +19,16 @@
 #include <string.h>
 #include <unistd.h>
 
-static int on_write_error(void)
+static int	on_write_error(void)
 {
 	print_error("echo", "write error: %s", strerror(errno));
 	return (EXIT_FAILURE);
 }
 
-int echo_builtin(int ac, char *av[])
+int	echo_builtin(int ac, char *av[])
 {
-	bool print_nl;
-	int i;
+	bool	print_nl;
+	int		i;
 
 	print_nl = true;
 	i = 1;

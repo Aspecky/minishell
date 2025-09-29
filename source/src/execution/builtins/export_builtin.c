@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:55:43 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/27 15:09:34 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 01:36:11 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *trim_value(char *value)
+static char	*trim_value(char *value)
 {
-	size_t i;
-	size_t j;
+	size_t	i;
+	size_t	j;
 
 	while (ft_isspace(*value))
 		value++;
@@ -38,7 +38,8 @@ char *trim_value(char *value)
 			i++;
 			while (ft_isspace(value[i]))
 				i++;
-		} else
+		}
+		else
 			value[j++] = value[i++];
 	}
 	if (ft_isspace(value[j]))
@@ -47,10 +48,10 @@ char *trim_value(char *value)
 	return (value);
 }
 
-static bool split_to_name_value(char *str, char **name, char **value)
+static bool	split_to_name_value(char *str, char **name, char **value)
 {
-	char *equal_ptr;
-	size_t i;
+	char	*equal_ptr;
+	size_t	i;
 
 	equal_ptr = 0;
 	i = 0;
@@ -68,49 +69,59 @@ static bool split_to_name_value(char *str, char **name, char **value)
 	return (true);
 }
 
-static bool print_exports(t_environ *env)
+static bool	print_exports(t_environ *env)
 {
-	char **ptr;
+	char	**ptr;
 
 	ptr = env->arr;
 	while (*ptr)
 	{
-		if (putstr("declare -x ") == -1 || putstr(*ptr) == -1 ||
-			putstr("\n") == -1)
+		if (putstr("declare -x ") == -1
+			|| putstr(*ptr) == -1 || putstr("\n") == -1)
 			return (false);
 		ptr++;
 	}
 	return (true);
 }
 
-int export_builtin(int ac, char *av[], t_environ *env)
+static int	do_export(int ac, char *av[], t_environ *env)
 {
-	int status;
-	int i;
-	char *name;
-	char *value;
+	int		i;
+	char	*name;
+	char	*value;
 
-	status = EXIT_SUCCESS;
-	if (ac == 1)
-	{
-		if (!print_exports(env))
-			print_error("export", "%s", strerror(errno));
-		return (status);
-	}
 	i = 1;
 	while (i < ac)
 	{
 		if (split_to_name_value(av[i], &name, &value))
 		{
 			if (!environ_set(env, name, trim_value(value)))
+			{
 				print_error("export", "environ_set: %s", strerror(errno));
+				return (EXIT_FAILURE);
+			}
 		}
 		else
 		{
 			print_error("export", "`%s': not a valid identifier", av[i]);
-			status = EXIT_FAILURE;
+			return (EXIT_FAILURE);
 		}
 		i++;
 	}
-	return (status);
+	return (EXIT_SUCCESS);
+}
+
+int	export_builtin(int ac, char *av[], t_environ *env)
+{
+	if (ac == 1)
+	{
+		if (!print_exports(env))
+		{
+			print_error("export", "%s", strerror(errno));
+			return (EXIT_FAILURE);
+		}
+		return (EXIT_SUCCESS);
+	}
+	else
+		return (do_export(ac, av, env));
 }

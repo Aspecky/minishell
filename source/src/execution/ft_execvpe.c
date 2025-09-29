@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 17:48:53 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 15:38:41 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 02:23:57 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,59 +17,88 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-// https://github.com/bminor/glibc/blob/master/posix/execvpe.c
-int ft_execvpe(const char *file, char *const argv[], char *const envp[])
+static char	*get_search_path(char *const envp[], bool *malloced)
 {
-	char *path;
-	char *allocated_path;
-	char *p;
-	char *subp;
-	char *pend;
-	size_t file_len;
-	size_t path_len;
-	size_t size;
-	bool got_eaccess;
+	char	*path;
 
-	if (ft_strchr(file, '/'))
-		return (execve(file, argv, envp), -1);
-	allocated_path = 0;
+	*malloced = false;
 	path = getenv_r("PATH", envp);
 	if (!path || !*path)
 	{
 		path = getcwd(0, 0);
 		if (!path)
-			return (-1);
-		allocated_path = path;
+			return (NULL);
+		*malloced = true;
 	}
+	return (path);
+}
+
+static char	*build_full_path(const char *dir, size_t dir_len, const char *file)
+{
+	size_t	file_len;
+	size_t	total_size;
+	char	*full_path;
+
 	file_len = ft_strlen(file);
-	p = path;
-	pend = 0;
-	got_eaccess = false;
+	total_size = dir_len + file_len + 2;
+	full_path = malloc(sizeof(char) * total_size);
+	if (!full_path)
+		return (NULL);
+	ft_memcpy(full_path, dir, dir_len);
+	*(full_path + dir_len) = '/';
+	ft_memcpy(full_path + dir_len + 1, file, file_len);
+	full_path[total_size - 1] = '\0';
+	return (full_path);
+}
+
+static bool	is_recoverable_error(void)
+{
+	return (errno == ENOENT || errno == ESTALE || errno == ENOTDIR
+		|| errno == ENODEV || errno == ETIMEDOUT);
+}
+
+static int	do_execve_in_path(const char *file, char *const argv[],
+		char *const envp[], const char *search_path)
+{
+	t_deip_vars	vars;
+
+	vars = (t_deip_vars){.current_dir = search_path, .got_eaccess = false};
 	while (true)
 	{
-		free(pend);
-		subp = ft_strchrnul(p, ':');
-		path_len = subp - p;
-		size = path_len + file_len + 2;
-		pend = malloc(sizeof(char) * size);
-		if (!pend)
+		vars.next_dir = ft_strchrnul(vars.current_dir, ':');
+		vars.dir_len = vars.next_dir - vars.current_dir;
+		vars.full_path = build_full_path(vars.current_dir, vars.dir_len, file);
+		if (!vars.full_path)
 			return (-1);
-		ft_memcpy(pend, p, path_len);
-		*(pend + path_len) = '/';
-		ft_memcpy(pend + path_len + 1, file, file_len);
-		pend[size - 1] = 0;
-		execve(pend, argv, envp);
+		execve(vars.full_path, argv, envp);
 		if (errno == EACCES)
-			got_eaccess = true;
-		else if (errno != ENOENT && errno != ESTALE && errno != ENOTDIR &&
-				 errno != ENODEV && errno != ETIMEDOUT)
-			return (free(allocated_path), free(pend), -1);
-		if (!*subp++)
-			break;
-		p = subp;
+			vars.got_eaccess = true;
+		else if (!is_recoverable_error())
+			return (free(vars.full_path), -1);
+		free(vars.full_path);
+		if (!*vars.next_dir++)
+			break ;
+		vars.current_dir = vars.next_dir;
 	}
-	(free(allocated_path), free(pend));
-	if (got_eaccess)
+	if (vars.got_eaccess)
 		errno = EACCES;
 	return (-1);
+}
+
+// https://github.com/bminor/glibc/blob/master/posix/execvpe.c
+int	ft_execvpe(const char *file, char *const argv[], char *const envp[])
+{
+	char	*search_path;
+	int		result;
+	bool	was_path_malloced;
+
+	if (ft_strchr(file, '/'))
+		return (execve(file, argv, envp), -1);
+	search_path = get_search_path(envp, &was_path_malloced);
+	if (!search_path)
+		return (-1);
+	result = do_execve_in_path(file, argv, envp, search_path);
+	if (was_path_malloced)
+		free(search_path);
+	return (result);
 }
