@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 19:49:22 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 17:38:48 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,8 @@ bool execute(t_sllist *commands, t_environ *env)
 			close(fds[STDOUT]);
 			close(cmd->stdout_fd);
 		}
+		if (cmd->stdin_fd != STDIN)
+			close(cmd->stdin_fd);
 		current = next;
 	}
 

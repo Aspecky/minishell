@@ -6,11 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 16:09:44 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 21:50:25 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 17:05:39 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#include "minishell.h"
 
 bool	is_executing(bool *new_value)
 {

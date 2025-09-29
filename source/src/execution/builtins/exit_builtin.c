@@ -6,12 +6,11 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 15:14:12 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 01:16:06 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 16:05:08 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-#include "ft_stdio.h"
 #include "ft_stdlib.h"
 #include "minishell.h"
 #include "utils.h"

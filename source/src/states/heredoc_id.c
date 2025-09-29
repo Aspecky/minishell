@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_hooks.h                                     :+:      :+:    :+:   */
+/*   heredoc_id.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 15:46:34 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 17:52:25 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/29 17:06:45 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/29 19:17:02 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SIGNAL_HOOKS_H
-# define SIGNAL_HOOKS_H
+#include "minishell.h"
 
-# include <signal.h>
-# include <stdbool.h>
+int	heredoc_id(int *new_value)
+{
+	static int	value = 0;
 
-void	init_sigaction(struct sigaction *act, void (*handler)(int));
-bool	hook_main_signals(void);
-bool	hook_child_signals(void);
-bool	hook_heredoc_signals(void);
-
-#endif
+	if (new_value)
+		value = *new_value;
+	return (value);
+}
