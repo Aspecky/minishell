@@ -6,13 +6,12 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 19:35:31 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 19:38:00 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
 #include "ft_string.h"
-#include "minishell.h"
 #include "parsing.h"
 #include "signal_hooks.h"
 #include <readline/readline.h>
