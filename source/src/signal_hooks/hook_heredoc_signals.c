@@ -6,18 +6,16 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 17:47:13 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 19:15:10 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 19:35:38 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "signal_hooks.h"
 #include <readline/readline.h>
 
 static void	sigint_handler(int sig)
 {
 	(void)sig;
-	heredoc_id(&(int){heredoc_id(0) + 1});
 	printf("\n");
 }
 

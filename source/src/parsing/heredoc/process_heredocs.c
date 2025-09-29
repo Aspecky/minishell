@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 19:09:22 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 19:35:31 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ static bool	is_delimiter_reached(t_pch_vars *v, t_redir *redir)
 			redir->file_or_delim, v->delim_len) == 0);
 }
 
-static bool	process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[],
-		int id)
+static bool	process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[])
 {
 	t_pch_vars	v;
 
@@ -60,7 +59,7 @@ static bool	process_cmd_heredoc(t_cmd *cmd, t_redir *redir, char *const envp[],
 		return (false);
 	v.lninfo = (t_lninfo){0, 0, 0, 0};
 	v.delim_len = ft_strlen(redir->file_or_delim);
-	while (heredoc_id(0) == id)
+	while (true)
 	{
 		(dputstr("> ", STDOUT), v.len = dgetline(STDIN, &v.lninfo));
 		if (v.len <= 0 || is_delimiter_reached(&v, redir))
@@ -86,10 +85,8 @@ bool	process_heredocs(t_sllist *commands, char *const envp[])
 	t_slnode	*redir_node;
 	t_cmd		*cmd;
 	t_redir		*redir;
-	int			id;
 
 	hook_heredoc_signals();
-	id = heredoc_id(0);
 	cmd_node = commands->head;
 	while (cmd_node)
 	{
@@ -99,7 +96,7 @@ bool	process_heredocs(t_sllist *commands, char *const envp[])
 		{
 			redir = redir_node->data;
 			if (redir->type == REDIR_HEREDOC)
-				if (!process_cmd_heredoc(cmd, redir, envp, id))
+				if (!process_cmd_heredoc(cmd, redir, envp))
 					return (hook_main_signals(), false);
 			redir_node = redir_node->next;
 		}
