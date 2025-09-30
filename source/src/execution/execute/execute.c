@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 17:38:48 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 00:50:18 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "utils.h"
 #include <errno.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -53,8 +54,9 @@ bool wait_on_children(pid_t last_pid)
 			g_last_exit_status = WEXITSTATUS(wstatus);
 		else if (WIFSIGNALED(wstatus))
 		{
+			printf("\n");
 			g_last_exit_status = 128 + WTERMSIG(wstatus);
-			if (WTERMSIG(wstatus) == SIGTERM)
+			if (WTERMSIG(wstatus) == SIGTERM || WTERMSIG(wstatus) == SIGKILL)
 				exit(g_last_exit_status);
 		}
 	}
@@ -180,6 +182,7 @@ bool execute(t_sllist *commands, t_environ *env)
 		}
 		if (cmd->stdin_fd != STDIN)
 			close(cmd->stdin_fd);
+		close(cmd->heredoc_fd);
 		current = next;
 	}
 

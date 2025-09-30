@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:49:38 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 20:36:18 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 22:00:52 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_cmd
 	int				argc;
 	int				stdin_fd;
 	int				stdout_fd;
+	int				heredoc_fd;
 	t_sllist		*redirs;
 }					t_cmd;
 

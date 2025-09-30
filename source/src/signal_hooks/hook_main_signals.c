@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 15:46:16 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 19:11:44 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 01:56:37 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 #include "signal_hooks.h"
 #include <readline/readline.h>
 #include <signal.h>
+#include <unistd.h>
 
 static void	sigint_handler(int sig)
 {
 	(void)sig;
-	printf("\n");
 	if (!is_executing(0))
 	{
+		printf("\n");
 		g_last_exit_status = 1;
 		rl_on_new_line();
+		rl_replace_line("", false);
+		rl_redisplay();
 	}
-	rl_replace_line("", false);
-	rl_redisplay();
 }
 
 bool	hook_main_signals(void)

@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:30:47 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 22:32:06 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 22:01:05 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_cmd	*cmd_new(int argc)
 	cmd->argc = 0;
 	cmd->stdin_fd = STDIN;
 	cmd->stdout_fd = STDOUT;
+	cmd->heredoc_fd = -1;
 	return (cmd);
 }
 

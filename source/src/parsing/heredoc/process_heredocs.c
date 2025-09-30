@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 19:38:00 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/29 22:03:09 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ static bool	post_loop(t_pch_vars *v, t_cmd *cmd)
 	(free(v->lninfo.line), free(v->lninfo.store));
 	if (v->len == -1)
 	{
-		if (cmd->stdin_fd != STDIN)
-			close(cmd->stdin_fd);
+		if (cmd->heredoc_fd != -1)
+			close(cmd->heredoc_fd);
 		return (close(v->fds[0]), close(v->fds[1]), false);
 	}
 	close(v->fds[STDOUT]);
-	if (cmd->stdin_fd != STDIN)
-		close(cmd->stdin_fd);
-	cmd->stdin_fd = v->fds[STDIN];
+	if (cmd->heredoc_fd != -1)
+		close(cmd->heredoc_fd);
+	cmd->heredoc_fd = v->fds[STDIN];
 	return (true);
 }
 
