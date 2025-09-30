@@ -6,24 +6,18 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/30 00:50:18 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 20:31:45 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
-#include "environ.h"
 #include "execution.h"
 #include "ft_stdio.h"
 #include "minishell.h"
-#include "signal_hooks.h"
+
 #include "utils.h"
-#include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <unistd.h>
 
 void redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
 {
@@ -47,22 +41,24 @@ void redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
 bool wait_on_children(pid_t last_pid)
 {
 	int wstatus;
+	int	estatus;
+	int	pid;
 
-	if (last_pid != -1 && waitpid(last_pid, &wstatus, 0) != -1)
+	while (true)
 	{
+		pid = waitpid_eintr(-1, &wstatus, 0);
+		if (pid == -1)
+			break ;
 		if (WIFEXITED(wstatus))
-			g_last_exit_status = WEXITSTATUS(wstatus);
+			estatus = WEXITSTATUS(wstatus);
 		else if (WIFSIGNALED(wstatus))
 		{
 			printf("\n");
-			g_last_exit_status = 128 + WTERMSIG(wstatus);
-			if (WTERMSIG(wstatus) == SIGTERM || WTERMSIG(wstatus) == SIGKILL)
-				exit(g_last_exit_status);
+			estatus = 128 + WTERMSIG(wstatus);
 		}
+		if (pid == last_pid)
+			g_last_exit_status = estatus;
 	}
-	while (true)
-		if (wait(0) == -1)
-			break;
 	return (true);
 }
 
@@ -98,7 +94,6 @@ bool execute(t_sllist *commands, t_environ *env)
 	pid_t last_pid;
 	int prev_stdin;
 
-	is_executing(&(bool){true});
 	pid = -1;
 	last_pid = -1;
 	prev_stdin = STDIN;
@@ -147,7 +142,7 @@ bool execute(t_sllist *commands, t_environ *env)
 					if (!open_cmd_redirs(cmd))
 						exit(EXIT_FAILURE);
 					redirect_io(cmd, fds, next);
-					hook_child_signals();
+					reset_signals((int[]){SIGINT, SIGQUIT, SIGTERM, 0});
 
 					if (is_builtin(cmd->argv[0]))
 						exit(run_builtin(cmd, env));
@@ -185,8 +180,6 @@ bool execute(t_sllist *commands, t_environ *env)
 		close(cmd->heredoc_fd);
 		current = next;
 	}
-
 	wait_on_children(last_pid);
-	is_executing(&(bool){false});
 	return (true);
 }

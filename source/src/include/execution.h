@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 17:49:13 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 02:24:01 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 20:30:20 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 # include "SinglyLinkedList.h"
 # include "defs.h"
 # include "environ.h"
+# include <errno.h>
+# include <signal.h>
 # include <stdbool.h>
+# include <string.h>
 # include <unistd.h>
 
 bool			execute(t_sllist *commands, t_environ *env);
@@ -25,6 +28,8 @@ bool			open_cmd_redirs(t_cmd *cmd);
 int				ft_execvpe(const char *file, char *const argv[],
 					char *const envp[]);
 int				dupminex(int oldfd, int minfd);
+int				waitpid_eintr(pid_t pid, int *wstatus, int options);
+void			reset_signals(int sigs[]);
 
 bool			is_builtin(const char *str);
 int				echo_builtin(int ac, char *av[]);

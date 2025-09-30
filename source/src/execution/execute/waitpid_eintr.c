@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_hooks.h                                     :+:      :+:    :+:   */
+/*   waitpid_eintr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 15:46:34 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 17:52:25 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/30 19:03:07 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/30 19:04:13 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SIGNAL_HOOKS_H
-# define SIGNAL_HOOKS_H
+#include "execution.h"
+#include <sys/wait.h>
 
-# include <signal.h>
-# include <stdbool.h>
+int waitpid_eintr(pid_t pid, int *wstatus, int options)
+{
+	int ret;
 
-void	init_sigaction(struct sigaction *act, void (*handler)(int));
-bool	hook_main_signals(void);
-bool	hook_child_signals(void);
-bool	hook_heredoc_signals(void);
-
-#endif
+	ret = waitpid(pid, wstatus, options);
+	if (ret == -1 && errno == EINTR)
+		return (waitpid_eintr(pid, wstatus, options));
+	return (ret);
+}

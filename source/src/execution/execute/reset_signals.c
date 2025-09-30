@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_executing.c                                     :+:      :+:    :+:   */
+/*   reset_signals.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/28 16:09:44 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 17:05:39 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/30 20:28:00 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/30 20:30:10 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "execution.h"
 
-bool	is_executing(bool *new_value)
+void	reset_signals(int sigs[])
 {
-	static bool	value = 0;
-
-	if (new_value)
-		value = *new_value;
-	return (value);
+	while (*sigs)
+	{
+		signal(*sigs, SIG_DFL);
+		sigs++;
+	}
 }

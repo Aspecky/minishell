@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hook_child_signals.c                               :+:      :+:    :+:   */
+/*   init_shell_signals.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 15:54:42 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/22 21:28:29 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/30 20:22:37 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/30 20:25:42 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "signal_hooks.h"
-#include <readline/readline.h>
+#include "minishell.h"
+#include <signal.h>
 
-bool	hook_child_signals(void)
+static void sigint_handler(int sig)
 {
-	rl_catch_signals = true;
-	if (signal(SIGINT, SIG_DFL) == SIG_ERR || signal(SIGQUIT,
-			SIG_DFL) == SIG_ERR)
-		return (false);
-	return (true);
+	(void)sig;
+}
+
+bool init_shell_signals(void)
+{
+	struct sigaction sigint_act;
+
+	sigint_act.sa_handler = sigint_handler;
+	sigemptyset(&sigint_act.sa_mask);
+	sigint_act.sa_flags = 0;
+
+	return (sigaction(SIGINT, &sigint_act, 0) != -1 &&
+			signal(SIGQUIT, SIG_IGN) != SIG_ERR &&
+			signal(SIGTERM, SIG_IGN) != SIG_ERR);
 }
