@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/30 20:35:43 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 22:50:10 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	clean_main(t_main *main)
 	sllist_free(main->commands, cmd_free);
 }
 
-static int rl_signal_event_hook_handler(void)
+static int	rl_signal_event_hook_handler(void)
 {
 	g_last_exit_status = 1;
 	printf("\n");

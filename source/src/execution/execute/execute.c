@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:15:51 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/30 20:31:45 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 22:48:14 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,25 @@
 #include "execution.h"
 #include "ft_stdio.h"
 #include "minishell.h"
-
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
 
-void redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
+static int	waitpid_eintr(pid_t pid, int *wstatus, int options)
 {
-	if (cmd->stdin_fd != STDIN)
-	{
-		dup2(cmd->stdin_fd, STDIN);
-		close(cmd->stdin_fd);
-	}
-	if (cmd->stdout_fd != STDOUT)
-	{
-		dup2(cmd->stdout_fd, STDOUT);
-		close(cmd->stdout_fd);
-	}
-	if (close_pipe)
-	{
-		close(fds[STDIN]);
-		close(fds[STDOUT]);
-	}
+	int	ret;
+
+	ret = waitpid(pid, wstatus, options);
+	if (ret == -1 && errno == EINTR)
+		return (waitpid_eintr(pid, wstatus, options));
+	return (ret);
 }
 
-bool wait_on_children(pid_t last_pid)
+static bool	wait_on_children(pid_t last_pid)
 {
-	int wstatus;
+	int	wstatus;
 	int	estatus;
 	int	pid;
 
@@ -48,7 +40,12 @@ bool wait_on_children(pid_t last_pid)
 	{
 		pid = waitpid_eintr(-1, &wstatus, 0);
 		if (pid == -1)
+		{
+			if (errno != ECHILD)
+				return (print_error("execution", "waitpid: %s",
+						strerror(errno)), false);
 			break ;
+		}
 		if (WIFEXITED(wstatus))
 			estatus = WEXITSTATUS(wstatus);
 		else if (WIFSIGNALED(wstatus))
@@ -62,124 +59,61 @@ bool wait_on_children(pid_t last_pid)
 	return (true);
 }
 
-static void exec_builtin(t_cmd *cmd, int fds[2], t_environ *env)
+static bool	maybe_pipe(bool next, int fds[2], int prev_stdin, t_cmd *cmd)
 {
-	int saved_stdin;
-	int saved_stdout;
-
-	if (!open_cmd_redirs(cmd))
-		return;
-
-	saved_stdin = dupminex(STDIN, STDERR);
-	saved_stdout = dupminex(STDOUT, STDERR);
-
-	// Setup redirection for the builtin
-	redirect_io(cmd, fds, false);
-	g_last_exit_status = run_builtin(cmd, env);
-
-	// Restore original file descriptors
-	dup2(saved_stdin, STDIN);
-	dup2(saved_stdout, STDOUT);
-	close(saved_stdin);
-	close(saved_stdout);
+	if (next)
+	{
+		if (pipe(fds) == -1)
+		{
+			if (prev_stdin != STDIN)
+				close(prev_stdin);
+			print_error("execution", "pipe: %s", strerror(errno));
+			return (false);
+		}
+		cmd->stdout_fd = dup(fds[STDOUT]);
+	}
+	return (true);
 }
 
-bool execute(t_sllist *commands, t_environ *env)
+static void	cleanup_fds(int *prev_stdin, bool next, int fds[2], t_cmd *cmd)
 {
-	t_slnode *current;
-	t_slnode *next;
-	t_cmd *cmd;
-	int fds[2];
-	pid_t pid;
-	pid_t last_pid;
-	int prev_stdin;
-
-	pid = -1;
-	last_pid = -1;
-	prev_stdin = STDIN;
-	current = commands->head;
-	while (current)
+	if (*prev_stdin != STDIN)
+		close(*prev_stdin);
+	if (next)
 	{
-		cmd = current->data;
-		next = current->next;
-
-		if (cmd->stdin_fd == STDIN)
-			cmd->stdin_fd = prev_stdin;
-		if (next)
-		{
-			if (pipe(fds) == -1)
-			{
-				if (prev_stdin != STDIN)
-					close(prev_stdin);
-				print_error("execution", "pipe: %s", strerror(errno));
-				break;
-			}
-			cmd->stdout_fd = dup(fds[STDOUT]);
-		}
-		if (cmd->argv[0])
-		{
-			if (commands->size == 1 && is_builtin(cmd->argv[0]))
-				exec_builtin(cmd, fds, env);
-			else
-			{
-				pid = fork();
-				if (pid == -1)
-				{
-					if (prev_stdin != STDIN)
-						close(prev_stdin);
-					if (next)
-					{
-						close(fds[STDIN]);
-						close(fds[STDOUT]);
-						close(cmd->stdout_fd);
-					}
-					print_error("execution", "fork: %s", strerror(errno));
-					break;
-				}
-				last_pid = pid;
-				if (pid == 0)
-				{
-					if (!open_cmd_redirs(cmd))
-						exit(EXIT_FAILURE);
-					redirect_io(cmd, fds, next);
-					reset_signals((int[]){SIGINT, SIGQUIT, SIGTERM, 0});
-
-					if (is_builtin(cmd->argv[0]))
-						exit(run_builtin(cmd, env));
-					else
-					{
-						int status;
-						char *errmsg;
-
-						ft_execvpe(cmd->argv[0], cmd->argv, env->arr);
-						status = EXIT_FAILURE;
-						errmsg = strerror(errno);
-						if (errno == ENOENT)
-						{
-							errmsg = "command not found";
-							status = 127;
-						} else if (errno == EACCES)
-							status = 126;
-						print_error(cmd->argv[0], errmsg);
-						exit(status);
-					}
-				}
-			}
-		}
-
-		if (prev_stdin != STDIN)
-			close(prev_stdin);
-		if (next)
-		{
-			prev_stdin = fds[STDIN];
-			close(fds[STDOUT]);
-			close(cmd->stdout_fd);
-		}
-		if (cmd->stdin_fd != STDIN)
-			close(cmd->stdin_fd);
-		close(cmd->heredoc_fd);
-		current = next;
+		*prev_stdin = fds[STDIN];
+		close(fds[STDOUT]);
+		close(cmd->stdout_fd);
 	}
-	wait_on_children(last_pid);
-	return (true);
+	if (cmd->stdin_fd != STDIN)
+		close(cmd->stdin_fd);
+	close(cmd->heredoc_fd);
+}
+
+void	execute(t_sllist *commands, t_environ *env)
+{
+	t_execute_vars	vars;
+
+	vars.last_pid = -1;
+	vars.prev_stdin = STDIN;
+	vars.current = commands->head;
+	while (vars.current)
+	{
+		vars.cmd = vars.current->data;
+		vars.next = vars.current->next;
+		if (vars.cmd->stdin_fd == STDIN)
+			vars.cmd->stdin_fd = vars.prev_stdin;
+		if (!maybe_pipe(vars.next, vars.fds, vars.prev_stdin, vars.cmd))
+			break ;
+		if (vars.cmd->argv[0])
+		{
+			if (commands->size == 1 && is_builtin(vars.cmd->argv[0]))
+				exec_builtin(vars.cmd, vars.fds, env);
+			else if (!exec_fork(&vars, env))
+				break ;
+		}
+		cleanup_fds(&vars.prev_stdin, vars.next, vars.fds, vars.cmd);
+		vars.current = vars.next;
+	}
+	wait_on_children(vars.last_pid);
 }

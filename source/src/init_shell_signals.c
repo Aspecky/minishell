@@ -13,20 +13,18 @@
 #include "minishell.h"
 #include <signal.h>
 
-static void sigint_handler(int sig)
+static void	sigint_handler(int sig)
 {
 	(void)sig;
 }
 
-bool init_shell_signals(void)
+bool	init_shell_signals(void)
 {
-	struct sigaction sigint_act;
+	struct sigaction	sigint_act;
 
 	sigint_act.sa_handler = sigint_handler;
 	sigemptyset(&sigint_act.sa_mask);
 	sigint_act.sa_flags = 0;
-
-	return (sigaction(SIGINT, &sigint_act, 0) != -1 &&
-			signal(SIGQUIT, SIG_IGN) != SIG_ERR &&
-			signal(SIGTERM, SIG_IGN) != SIG_ERR);
+	return (sigaction(SIGINT, &sigint_act, 0) != -1 && signal(SIGQUIT,
+			SIG_IGN) != SIG_ERR && signal(SIGTERM, SIG_IGN) != SIG_ERR);
 }

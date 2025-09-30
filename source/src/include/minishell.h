@@ -19,6 +19,6 @@
 # include <stdbool.h>
 
 extern int	g_last_exit_status;
-bool init_shell_signals(void);
+bool		init_shell_signals(void);
 
 #endif

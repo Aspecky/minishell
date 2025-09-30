@@ -6,7 +6,7 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 17:49:13 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/30 20:30:20 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 22:48:46 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,24 @@
 # include <string.h>
 # include <unistd.h>
 
-bool			execute(t_sllist *commands, t_environ *env);
+typedef struct s_execute_vars
+{
+	t_slnode	*current;
+	t_slnode	*next;
+	t_cmd		*cmd;
+	int			fds[2];
+	pid_t		last_pid;
+	int			prev_stdin;
+}				t_execute_vars;
+
+void			execute(t_sllist *commands, t_environ *env);
+bool			exec_fork(t_execute_vars *vars, t_environ *env);
+void			exec_builtin(t_cmd *cmd, int fds[2], t_environ *env);
+void			redirect_io(t_cmd *cmd, int fds[2], bool close_pipe);
 
 bool			open_cmd_redirs(t_cmd *cmd);
 int				ft_execvpe(const char *file, char *const argv[],
 					char *const envp[]);
-int				dupminex(int oldfd, int minfd);
-int				waitpid_eintr(pid_t pid, int *wstatus, int options);
-void			reset_signals(int sigs[]);
 
 bool			is_builtin(const char *str);
 int				echo_builtin(int ac, char *av[]);
@@ -40,16 +50,6 @@ int				env_builtin(char *const envp[]);
 int				unset_builtin(int ac, char *av[], t_environ *env);
 int				export_builtin(int ac, char *av[], t_environ *env);
 int				run_builtin(t_cmd *cmd, t_environ *env);
-
-typedef struct s_execute_vars
-{
-	t_slnode	*current;
-	t_slnode	*next;
-	t_cmd		*cmd;
-	int			fds[2];
-	pid_t		pid;
-	int			prev_stdin;
-}				t_execute_vars;
 
 typedef struct s_deip_vars
 {

@@ -14,9 +14,9 @@
 #include "ft_string.h"
 #include <stdlib.h>
 
-int run_builtin(t_cmd *cmd, t_environ *env)
+int	run_builtin(t_cmd *cmd, t_environ *env)
 {
-	const char *name;
+	const char	*name;
 
 	name = cmd->argv[0];
 	if (ft_strcmp(name, "cd") == 0)

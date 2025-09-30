@@ -1,24 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   waitpid_eintr.c                                    :+:      :+:    :+:   */
+/*   redirect_io.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 19:03:07 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/30 19:04:13 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/30 22:40:19 by mtarrih           #+#    #+#             */
+/*   Updated: 2025/09/30 22:40:40 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-#include <sys/wait.h>
+#include "ft_stdio.h"
 
-int waitpid_eintr(pid_t pid, int *wstatus, int options)
+void	redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
 {
-	int ret;
-
-	ret = waitpid(pid, wstatus, options);
-	if (ret == -1 && errno == EINTR)
-		return (waitpid_eintr(pid, wstatus, options));
-	return (ret);
+	if (cmd->stdin_fd != STDIN)
+	{
+		dup2(cmd->stdin_fd, STDIN);
+		close(cmd->stdin_fd);
+	}
+	if (cmd->stdout_fd != STDOUT)
+	{
+		dup2(cmd->stdout_fd, STDOUT);
+		close(cmd->stdout_fd);
+	}
+	if (close_pipe)
+	{
+		close(fds[STDIN]);
+		close(fds[STDOUT]);
+	}
 }
