@@ -6,21 +6,15 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:52:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/30 22:50:10 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 23:54:14 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "SinglyLinkedList.h"
-#include "defs.h"
-#include "environ.h"
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
-
 #include "utils.h"
-#include <stdio.h>
 #include <readline/readline.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 int			g_last_exit_status = 0;
@@ -57,9 +51,9 @@ int	main(void)
 
 	if (!init_shell_signals())
 		return (print_error("sigaction", strerror(errno)), EXIT_FAILURE);
-	rl_outstream = stderr;
 	if (!init_main(&main))
 		return (perror("main"), EXIT_FAILURE);
+	rl_outstream = stderr;
 	rl_catch_signals = false;
 	rl_signal_event_hook = rl_signal_event_hook_handler;
 	while (true)
