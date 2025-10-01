@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: hasbayou <hasbayou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/24 15:48:08 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/26 20:22:18 by mtarrih          ###   ########.fr       */
+/*   Created: 2025/09/24 15:48:08 by hasbayou          #+#    #+#             */
+/*   Updated: 2025/10/01 15:43:44 by hasbayou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "ft_string.h"
 #include <stdlib.h>
 
-int run_builtin(t_cmd *cmd, t_environ *env)
+int	run_builtin(t_cmd *cmd, t_environ *env)
 {
-	const char *name;
+	const char	*name;
 
 	name = cmd->argv[0];
 	if (ft_strcmp(name, "cd") == 0)

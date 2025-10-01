@@ -16,10 +16,10 @@
 # include "SinglyLinkedList.h"
 # include "Vector.h"
 # include "defs.h"
+# include "ft_stdio.h"
 # include <stdbool.h>
 # include <stddef.h>
 # include <sys/types.h>
-# include "ft_stdio.h"
 
 /* External Definitions */
 bool				parse(char *stream, char *const envp[], t_sllist *commands);
@@ -48,12 +48,12 @@ typedef struct s_token
 
 typedef struct s_pch_vars
 {
-	int			fds[2];
-	t_lninfo	lninfo;
-	ssize_t		len;
-	size_t		delim_len;
-	char		*line;
-}				t_pch_vars;
+	int				fds[2];
+	t_lninfo		lninfo;
+	ssize_t			len;
+	size_t			delim_len;
+	char			*line;
+}					t_pch_vars;
 
 bool				validate_quotes_balance(const char *str);
 bool				tokenize(char *stream, t_sllist *tokens);

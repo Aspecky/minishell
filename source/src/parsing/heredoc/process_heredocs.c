@@ -6,24 +6,26 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 17:26:29 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/29 22:03:09 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 20:32:57 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defs.h"
 #include "ft_string.h"
 #include "parsing.h"
-#include "signal_hooks.h"
-#include <readline/readline.h>
 #include <stdio.h>
+#include <readline/readline.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 static bool	post_loop(t_pch_vars *v, t_cmd *cmd)
 {
 	(free(v->lninfo.line), free(v->lninfo.store));
 	if (v->len == -1)
 	{
+		if (errno == EINTR)
+			printf("\n");
 		if (cmd->heredoc_fd != -1)
 			close(cmd->heredoc_fd);
 		return (close(v->fds[0]), close(v->fds[1]), false);
@@ -85,7 +87,6 @@ bool	process_heredocs(t_sllist *commands, char *const envp[])
 	t_cmd		*cmd;
 	t_redir		*redir;
 
-	hook_heredoc_signals();
 	cmd_node = commands->head;
 	while (cmd_node)
 	{
@@ -96,11 +97,10 @@ bool	process_heredocs(t_sllist *commands, char *const envp[])
 			redir = redir_node->data;
 			if (redir->type == REDIR_HEREDOC)
 				if (!process_cmd_heredoc(cmd, redir, envp))
-					return (hook_main_signals(), false);
+					return (false);
 			redir_node = redir_node->next;
 		}
 		cmd_node = cmd_node->next;
 	}
-	hook_main_signals();
 	return (true);
 }

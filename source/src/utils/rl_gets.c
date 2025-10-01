@@ -6,11 +6,12 @@
 /*   By: mtarrih <mtarrih@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 17:19:19 by mtarrih           #+#    #+#             */
-/*   Updated: 2025/09/28 20:39:44 by mtarrih          ###   ########.fr       */
+/*   Updated: 2025/09/30 16:56:17 by mtarrih          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
+#include <stdio.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>

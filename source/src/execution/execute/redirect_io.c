@@ -1,39 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_builtin.c                                     :+:      :+:    :+:   */
+/*   redirect_io.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hasbayou <hasbayou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/24 15:14:12 by hasbayou          #+#    #+#             */
-/*   Updated: 2025/10/01 15:42:44 by hasbayou         ###   ########.fr       */
+/*   Created: 2025/09/30 22:40:19 by hasbayou          #+#    #+#             */
+/*   Updated: 2025/10/01 15:43:34 by hasbayou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-#include "ft_stdlib.h"
-#include "minishell.h"
-#include "utils.h"
-#include <stdlib.h>
-#include <unistd.h>
+#include "ft_stdio.h"
 
-int	exit_builtin(int ac, char *av[])
+void	redirect_io(t_cmd *cmd, int fds[2], bool close_pipe)
 {
-	int	exit_code;
-	int	status;
-
-	if (ac == 1)
-		exit(g_last_exit_status);
-	if (ac > 2)
+	if (cmd->stdin_fd != STDIN)
 	{
-		print_error("exit", "too many arguments");
-		return (EXIT_FAILURE);
+		dup2(cmd->stdin_fd, STDIN);
+		close(cmd->stdin_fd);
 	}
-	exit_code = atoi_s(av[1], &status);
-	if (status != 0)
+	if (cmd->stdout_fd != STDOUT)
 	{
-		print_error("exit", "%s: numeric argument required", av[1]);
-		exit(2);
+		dup2(cmd->stdout_fd, STDOUT);
+		close(cmd->stdout_fd);
 	}
-	exit(exit_code);
+	if (close_pipe)
+	{
+		close(fds[STDIN]);
+		close(fds[STDOUT]);
+	}
 }
